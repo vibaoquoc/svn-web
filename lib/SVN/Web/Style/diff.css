@@ -4,22 +4,26 @@
 .file .fileheader, .file .hunkheader {
   color: #888;
 }
-.file .hunk .ctx {
-  background: #eee;
+.file .hunk { 
   font-family: monospace;
   white-space: pre;
+}
+.file .hunk .ctx {
+  background: #eee;
 }
 .file .hunk ins { 
   background: #dfd; 
   text-decoration: none; 
   display: block; 
-  font-family: monospace; 
-  white-space: pre;
 }
 .file .hunk del {
   background: #fdd;
   text-decoration: none;
   display: block;
-  font-family: monospace;
-  white-space: pre;
+}
+ins { 
+  border: 1px solid #0c0;
+}
+del { 
+  border: 1px solid #c00;
 }
