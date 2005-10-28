@@ -31,7 +31,7 @@ branchpoint for
 [% END %]
 [% UNLESS isdir || loop.count == loop.size%]
 [% prev = loop.count %]
-<a href="[% script %]/[% repos %]/diff[% path %]?rev1=[% revs.$prev.rev %]&rev2=[% rev %]">[%|l%](diff with previous)[%END%]</a><br/>
+[%|l%](diff with previous)[%END%]: <a href="[% script %]/[% repos %]/diff[% path %]?rev1=[% revs.$prev.rev %]&rev2=[% rev %]">HTML</a> | <a href="[% script %]/[% repos %]/diff[% path %]?rev1=[% revs.$prev.rev %]&rev2=[% rev %]&mime=text/plain">TEXT</a><br/>
 [% END %]
 [% msg | html | html_line_break %]
 [% END %]
