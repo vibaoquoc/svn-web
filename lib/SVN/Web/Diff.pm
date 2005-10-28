@@ -72,6 +72,13 @@ sub run {
     }
 
     if($mime eq 'text/html') {
+	$output =~ s/^  //mg;
+	$output =~ s/<span class="ctx">  /<span class="ctx">/mg;
+	$output =~ s/<ins>\+ /<ins>/mg;
+	$output =~ s/<del>- /<del>/mg;
+	$output =~ s/^- //mg;
+	$output =~ s/^\+ //mg;
+
 	return { template => 'diff',
 		 data => { body => $output }};
     } else {
