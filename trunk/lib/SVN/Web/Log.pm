@@ -53,9 +53,10 @@ sub traverse_history {
 sub run {
     my $self = shift;
     my $pool = SVN::Pool->new_default_sub;
-    my $limit = $self->{cgi}->param('limit') || 20;
     my $fs = $self->{repos}->fs;
-    my $root = $fs->revision_root ($fs->youngest_rev);
+    my $limit = $self->{cgi}->param('limit') || 20;
+    my $rev   = $self->{cgi}->param('rev') || $fs->youngest_rev();
+    my $root = $fs->revision_root ($rev);
     my $endrev = 0;
     if ($limit) {
 	my $left = $limit;
@@ -67,7 +68,7 @@ sub run {
 #			       fromrev => $fs->youngest_rev, torev => -1,
 #			       cb_log => sub {$self->_log(@_)});
 
-    $self->{repos}->get_logs ([$self->{path}], $fs->youngest_rev, $endrev, 1, 0,
+    $self->{repos}->get_logs ([$self->{path}], $rev, $endrev, 1, 0,
                              sub { $self->_log(@_)});
     return {template => 'log',
 	    data => { isdir => ($root->is_dir($self->{path})),
