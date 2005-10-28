@@ -74,7 +74,7 @@ my $config;
 
 my %REPOS;
 
-our @PLUGINS = qw/branch browse checkout diff list log revision RSS template/;
+our @PLUGINS = qw/branch browse checkout diff list log revision RSS template view/;
 
 sub load_config {
     my $file = shift || 'config.yaml';
