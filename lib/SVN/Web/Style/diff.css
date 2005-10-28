@@ -9,7 +9,7 @@
   white-space: pre;
 }
 .file .hunk .ctx {
-  background: #eee;
+  background: #fff;
 }
 .file .hunk ins { 
   background: #dfd; 
