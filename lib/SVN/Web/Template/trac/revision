@@ -69,7 +69,6 @@
   <div id="legend">
     <h3>Legend:</h3>
     <dl>
-      <dt class="unmod"></dt><dd>Unmodified</dd>
       <dt class="add"></dt><dd>Added</dd>
       <dt class="rem"></dt><dd>Removed</dd>
       <dt class="mod"></dt><dd>Modified</dd>
