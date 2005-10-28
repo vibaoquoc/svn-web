@@ -1,3 +1,5 @@
+# -*- Mode: cperl; cperl-indent-level: 4 -*-
+
 package SVN::Web::Diff;
 use strict;
 use Text::Diff;
@@ -21,6 +23,7 @@ sub run {
     my $fs = $self->{repos}->fs;
     my $rev1 = $self->{cgi}->param('rev1');
     my $rev2 = $self->{cgi}->param('rev2');
+    my $mime = $self->{cgi}->param('mime') || 'text/html';
 
     my $root1 = $fs->revision_root ($rev1);
     my $root2 = $fs->revision_root ($rev2);
@@ -58,18 +61,23 @@ sub run {
 			       1, 1, 0, 1);
     }
     else {
+        my $style;
+	$mime eq 'text/html' and $style = 'Text::Diff::HTML';
+	$mime eq 'text/plain' and $style = 'Unified';
+
 	$output = Text::Diff::diff
 	    ($root1->file_contents ($self->{path}),
 	     $root2->file_contents ($self->{path}),
-	     { STYLE => "Unified" });
+	     { STYLE => $style });
     }
 
-
-    # TODO: different type of presentation, download, etc
-    return { mimetype => 'text/plain',
-	     body => $output
-
-	     };
+    if($mime eq 'text/html') {
+	return { template => 'diff',
+		 data => { body => $output }};
+    } else {
+	return { mimetype => $mime,
+		 body => $output };
+    }
 }
 
 1;
