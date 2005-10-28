@@ -1,52 +1,88 @@
-<div class="blogbody">
-<div class="title">
-[%|l(rev)%]revision %1[%END%] - [% author || '(no author)' %] - [% date %]:<br />
+[% class_with_action = { 'A' => 'add',
+                         'M' => 'mod', 
+                         'D' => 'rem',
+                         } %]
+
+<div id="ctxtnav" class="nav">
+  <h2>Revision Navigation</h2>
+
+  <ul>
+    [% IF rev > 1 %]
+      <li class="first[% rev == youngest_rev ? ' last': '' %]"><a href="[% script %]/[% repos %]/revision?rev=[% rev - 1 %]">Previous Revision</a></li>
+    [% END %]
+    [% IF rev != youngest_rev %]
+      <li class="first last"><a href="[% script %]/[% repos %]/revision?rev=[% rev + 1 %]">Next Revision</a></li>
+    [% END %]
+  </ul>
 </div>
-<p>
-[% msg | html | html_line_break %]
-</p>
-[% FOREACH path = paths %]
-[% path.value.action %] -
-[% IF path.value.isdir %]
-<a href="[% script %]/[% repos %]/browse[% path.key %]/?rev=[% rev %]">[% path.key %]</a>
-[% IF path.value.copyfrom %]
-<a href="[% script %]/[% repos %]/browse[% path.value.copyfrom %]/?rev=[% path.value.copyfromrev %]">[%|l(path.value.copyfrom, path.value.copyfromrev)%](from %1:%2)[%END%]</a>
-[% END %]
 
-[% ELSE %]
-[% IF path.value.action == 'D' %]
-[% path.key %]
-[% ELSE %]
-<a href="[% script %]/[% repos %]/view[% path.key %]?rev=[% rev %]">[% path.key %]</a>
-[% IF path.value.action == 'M' %]
-<a href="#[% path.key %]">[%|l%](diff)[%END%]</a>
-[% END %]
-[% IF path.value.action == 'A' %]
-[% IF path.value.diff %]
-<a href="#[% path.key %]">[%|l%](diff)[%END%]</a>
-[% END %]
-[% END %]
-<a href="[% script %]/[% repos %]/checkout[% path.key %]?rev=[% rev %]">[%|l%](checkout)[%END%]</a>
-[% END %]
-[% IF path.value.copyfrom %]
-<a href="[% script %]/[% repos %]/view[% path.value.copyfrom %]?rev=[% path.value.copyfromrev %]">[%|l(path.value.copyfrom, path.value.copyfromrev)%](from %1:%2)[%END%]</a>
-[% END %]
-[% END %]
+<h1>[%|l%]Revision[%END%] [% rev %]</h1>
 
-<br />
-[% END %]
+<dl id="overview">
+  <dt class="time">Timestamp:</dt>
+  <dd class="time">[% date %]</dd>
 
-<!-- Diff output -->
-[% FOREACH path = paths %]
-[% IF path.value.action == 'M' %]
-<b><a name="[% path.key %]">[% path.key %]</a></b><br />
-[% path.value.diff %]
-[% END %]
-[% IF path.value.action == 'A' %]
-[% IF path.value.diff %]
-<b><a name="[% path.key %]">[% path.key %]</a></b><br />
-[% path.value.diff %]
-[% END %]
-[% END %]
-[% END %]
+  <dt class="author">Author:</dt>
+  <dd class="author">[% author || '(no author)' %]</dd>
+
+  <dt class="message">Message:</dt>
+  <dd class="message"><p>[% msg | html | html_line_break %]</p></dd>
+
+  <dt class="files">Files:</dt>
+  <dd class="files">
+    <ul>
+    [% FOREACH path = paths %]
+    <li>
+      <div class="[% class_with_action.${path.value.action} %]"></div>
+      [% IF path.value.isdir %]
+        <a href="[% script %]/[% repos %]/browse[% path.key %]/?rev=[% rev %]">[% path.key %]</a>
+        [% IF path.value.copyfrom %]([%|l%]copied from [%END%]
+          <a href="[% script %]/[% repos %]/browse[% path.value.copyfrom %]/?rev=[% path.value.copyfromrev %]">[% path.value.copyfrom %]:[% path.value.copyfromrev %]</a>)
+        [% END %]
+      [% ELSE %]
+        [% IF path.value.action == 'D' %]
+          [% path.key %]
+        [% ELSE %]
+          <a href="[% script %]/[% repos %]/view[% path.key %]?rev=[% rev %]">[% path.key %]</a>
+          [% IF path.value.action == 'M' %]
+            (<a href="#[% path.key %]">[%|l%]diff[%END%]</a>)
+          [% END %]
+          [% IF path.value.action == 'A' %]
+            [% IF path.value.diff %]
+              (<a href="#[% path.key %]">[%|l%]diff[%END%]</a>)
+            [% END %]
+          [% END %]
+          (<a href="[% script %]/[% repos %]/checkout[% path.key %]?rev=[% rev %]">[%|l%]checkout[%END%]</a>)
+        [% END %]
+        [% IF path.value.copyfrom %]([%|l%]copied from [%END%]
+          <a href="[% script %]/[% repos %]/view[% path.value.copyfrom %]?rev=[% path.value.copyfromrev %]">[% path.value.copyfrom %]:[% path.value.copyfromrev %]</a>)
+        [% END %]
+      [% END %]
+    </li>
+    [% END %]
+    </ul>
+  </dd>
+</dl>
+
+<div class="diff">
+  <div id="legend">
+    <h3>Legend:</h3>
+    <dl>
+      <dt class="unmod"></dt><dd>Unmodified</dd>
+      <dt class="add"></dt><dd>Added</dd>
+      <dt class="rem"></dt><dd>Removed</dd>
+      <dt class="mod"></dt><dd>Modified</dd>
+    </dl>
+  </div>
+
+  <ul>
+  [% FOREACH path = paths %]
+    [% NEXT IF path.value.isdir %]
+    [% NEXT UNLESS path.value.diff %]
+    <li id="[% path.key %]">
+      <h2>[% path.key %]</h2>
+        [% path.value.diff %]
+    </li>
+  [% END %]
+  </ul>
 </div>

@@ -62,11 +62,11 @@ msgid "history for path %1"
 msgstr ""
 
 #: template/browse:19
-msgid "name"
+msgid "Name"
 msgstr ""
 
 #: template/browse:19
-msgid "revision"
+msgid "Rev"
 msgstr ""
 
 #: template/log:8 template/revision:1
@@ -75,5 +75,9 @@ msgid "revision %1"
 msgstr ""
 
 #: template/browse:19
-msgid "size"
+msgid "Size"
+msgstr ""
+
+#: template/browse
+msgid "Last Change"
 msgstr ""
