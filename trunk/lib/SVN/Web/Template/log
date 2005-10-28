@@ -48,7 +48,7 @@ branchpoint for
 [% IF pk.value.action == 'D' %]
 [% pk.key %]
 [% ELSE %]
-<a href="[% script %]/[% repos %]/log[% pk.key %]#rev[% rev %]">[% pk.key %]</a>
+<a href="[% script %]/[% repos %]/view[% pk.key %]?rev=[% rev %]">[% pk.key %]</a>
 <a href="[% script %]/[% repos %]/checkout[% pk.key %]?rev=[% rev %]">[%|l%](checkout)[%END%]</a>
 [% END %]
 [% IF pk.value.copyfrom %]
