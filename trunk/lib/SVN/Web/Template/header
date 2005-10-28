@@ -31,7 +31,7 @@
 /   [% p %]
       [% END %]
     [% ELSE %]
-/    <a href="[% url %][% action %][% urlpath.join('/') %]">[% p %]</a>
+/    <a href="[% url %]browse[% urlpath.join('/') %]">[% p %]</a>
     [% END %]
   [% END %]
 </div>
