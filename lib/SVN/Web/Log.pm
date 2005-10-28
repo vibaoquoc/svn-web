@@ -13,13 +13,19 @@ sub new {
 }
 
 sub _log {
-    my ($self, $paths, $rev, $author, $date, $message, $pool) = @_;
+    my ($self, $paths, $rev, $author, $date, $msg, $pool) = @_;
 #    my ($self, $rev, $root, $paths, $props) = @_;
     return unless $rev > 0;
 #    my ($author, $date, $message) = @{$props}{qw/svn:author svn:date svn:log/};
 
-    push @{$self->{REVS}}, {rev => $rev, author => $author,
-			    date => $date, msg => $message};
+    my $data = { rev => $rev, author => $author,
+		 date => $date, msg => $msg };
+    $data->{paths} = { map { $_ => { action => $paths->{$_}->action(),
+				     copyfrom => $paths->{$_}->copyfrom_path(),
+				     copyfromrev => $paths->{$_}->copyfrom_rev(),
+				     }} keys %$paths};
+
+    push @{$self->{REVS}}, $data;
 }
 
 # XXX: stolen from svk::util
@@ -53,7 +59,7 @@ sub run {
     my $endrev = 0;
     if ($limit) {
 	my $left = $limit;
-	traverse_history (root => $root, path => $self->{path}, cross => 1,
+	traverse_history (root => $root, path => $self->{path}, cross => 0,
 			  callback => sub { $endrev = $_[1]; return --$left });
     }
 #    SVK::Command::Log::do_log (repos => $self->{repos}, limit => $limit,
@@ -61,7 +67,7 @@ sub run {
 #			       fromrev => $fs->youngest_rev, torev => -1,
 #			       cb_log => sub {$self->_log(@_)});
 
-    $self->{repos}->get_logs ([$self->{path}], $fs->youngest_rev, $endrev, 0, 0,
+    $self->{repos}->get_logs ([$self->{path}], $fs->youngest_rev, $endrev, 1, 0,
                              sub { $self->_log(@_)});
     return {template => 'log',
 	    data => { isdir => ($root->is_dir($self->{path})),
