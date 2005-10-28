@@ -184,6 +184,12 @@ on the system are ignored.
 
 The configuration file includes a suggested list of default filters.
 
+You can write your own plugins to recognise certain information in your
+local log messages and automatically turn them in to links.  For example,
+if you have a web-based issue tracking system, you might write a plugin
+that recognises text of the form C<t#1234> and turns it in to a link to
+ticket #1234 in your ticketing system.
+
 =head2 Actions and action classes
 
 Each action that SVN::Web can carry out is implemented as a class (see
