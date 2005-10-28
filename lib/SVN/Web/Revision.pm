@@ -209,12 +209,14 @@ sub run {
       }
     } continue {
       if(defined $self->{REV}->{paths}{$path}{diff}) {
-	$self->{REV}->{paths}{$path}{diff} =~ s/^  //mg;
+	$self->{REV}->{paths}{$path}{diff} =~ s/^  /<span class="diff-leader">  <\/span>/mg;
 	$self->{REV}->{paths}{$path}{diff} =~ s/<span class="ctx">  /<span class="ctx">/mg;
-	$self->{REV}->{paths}{$path}{diff} =~ s/<ins>\+ /<ins>/mg;
-	$self->{REV}->{paths}{$path}{diff} =~ s/<del>- /<del>/mg;
-	$self->{REV}->{paths}{$path}{diff} =~ s/^- //mg;
-	$self->{REV}->{paths}{$path}{diff} =~ s/^\+ //mg;
+	$self->{REV}->{paths}{$path}{diff} =~ s/<ins>\+ /<span class="ins"><span class="diff-leader">+ <\/span>/mg;
+	$self->{REV}->{paths}{$path}{diff} =~ s/<del>- /<span class="del"><span class="diff-leader">- <\/span>/mg;
+	$self->{REV}->{paths}{$path}{diff} =~ s/<\/ins>/<\/span>/mg;
+	$self->{REV}->{paths}{$path}{diff} =~ s/<\/del>/<\/span>/mg;
+	$self->{REV}->{paths}{$path}{diff} =~ s/^- /<span class="diff-leader">- <\/span>/mg;
+	$self->{REV}->{paths}{$path}{diff} =~ s/^\+ /<span class="diff-leader">+ <\/span>/mg;
       }
     }
 
