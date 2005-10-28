@@ -1,5 +1,6 @@
 package SVN::Web::Revision;
 use strict;
+use Text::Diff;
 use SVN::Core;
 use SVN::Repos;
 use SVN::Fs;
@@ -37,6 +38,26 @@ sub run {
 
     $self->{repos}->get_logs (['/'], $rev, $rev, 1, 0,
 			      sub { $self->{REV} = $self->_log(@_)});
+
+    # Generate the diffs for each file
+    foreach my $path (keys %{$self->{REV}->{paths}}) {
+      if($self->{REV}->{paths}{$path}{action} eq 'M') {
+	my $root1 = $self->{repos}->fs()->revision_root($rev);
+	my $root2 = $self->{repos}->fs()->revision_root($rev - 1);
+
+	my $kind;
+	$kind = $root1->check_path($path);
+	next if $kind == $SVN::Node::none;
+	$kind = $root2->check_path($path);
+	next if $kind == $SVN::Node::none;
+
+	$self->{REV}->{paths}{$path}{diff} = Text::Diff::diff
+	  ($root1->file_contents($path),
+	   $root2->file_contents($path),
+	   { STYLE => 'Text::Diff::HTML' });
+      }
+    }
+
     return {template => 'revision',
 	    data => { rev => $rev, %{$self->{REV}}}};
 }
