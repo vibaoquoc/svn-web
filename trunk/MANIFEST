@@ -36,6 +36,7 @@ lib/SVN/Web/Template/list
 lib/SVN/Web/Template/log
 lib/SVN/Web/Template/revision
 lib/SVN/Web/Test.pm
+lib/SVN/Web/View.pm
 Makefile.PL
 MANIFEST			This list of files
 META.yml
