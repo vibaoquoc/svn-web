@@ -6,29 +6,34 @@
 <p>
 [% msg | html | html_line_break %]
 </p>
-[% FOREACH path = paths %]
-[% path.value.action %] -
-[% IF path.value.isdir %]
-<a href="[% script %]/[% repos %]/browse[% path.key %]/?rev=[% rev %]">[% path.key %]</a>
-[% IF path.value.copyfrom %]
-<a href="[% script %]/[% repos %]/browse[% path.value.copyfrom %]/?rev=[% path.value.copyfromrev %]">[%|l(path.value.copyfrom, path.value.copyfromrev)%](from %1:%2)[%END%]</a>
+[% FOREACH file = paths %]
+[% file.value.action %] -
+[% IF file.value.isdir %]
+<a href="[% script %]/[% repos %]/browse[% file.key %]/?rev=[% rev %]">[% file.key %]</a>
+[% IF file.value.copyfrom %]
+<a href="[% script %]/[% repos %]/browse[% file.value.copyfrom %]/?rev=[% file.value.copyfromrev %]">[%|l(file.value.copyfrom, file.value.copyfromrev)%](from %1:%2)[%END%]</a>
 [% END %]
 
 [% ELSE %]
-[% IF path.value.action == 'D' %]
-[% path.key %]
+[% IF file.value.action == 'D' %]
+[% file.key %]
 [% ELSE %]
-<a href="[% script %]/[% repos %]/view[% path.key %]?rev=[% rev %]">[% path.key %]</a>
-<a href="[% script %]/[% repos %]/checkout[% path.key %]?rev=[% rev %]">[%|l%](checkout)[%END%]</a>
+<a href="[% script %]/[% repos %]/view[% file.key %]?rev=[% rev %]">[% file.key %]</a>
+<a href="[% script %]/[% repos %]/checkout[% file.key %]?rev=[% rev %]">[%|l%](checkout)[%END%]</a>
 [% END %]
-[% IF path.value.copyfrom %]
-<a href="[% script %]/[% repos %]/view[% path.value.copyfrom %]?rev=[% path.value.copyfromrev %]">[%|l(path.value.copyfrom, path.value.copyfromrev)%](from %1:%2)[%END%]</a>
+[% IF file.value.copyfrom %]
+<a href="[% script %]/[% repos %]/view[% file.value.copyfrom %]?rev=[% file.value.copyfromrev %]">[%|l(file.value.copyfrom, file.value.copyfromrev)%](from %1:%2)[%END%]</a>
 [% END %]
 [% END %]
 
 <br />
 [% END %]
-<pre>
-[% file | html %]
-</pre>
+<div id="preview">
+  [% IF mimetype.match('^text/') %]
+    <pre class="code-block">[% file | html %]</pre>
+  [% ELSIF mimetype.match('^image/') %]
+    <img src="[% script %]/[% repos %]/checkout[% path %]" />
+  [% ELSE %]
+<p>This file can not be displayed in the browser.  You can <a href="[% script %]/[% repos %]/checkout[% path %]">download it</a>.</p>
+  [% END %]
 </div>
