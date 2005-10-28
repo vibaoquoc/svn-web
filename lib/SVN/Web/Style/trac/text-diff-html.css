@@ -11,19 +11,22 @@
 .file .hunk .ctx {
   background: #fff;
 }
-.file .hunk ins { 
+.file .hunk .ins { 
   background: #dfd; 
   text-decoration: none; 
   display: block; 
 }
-.file .hunk del {
+.file .hunk .del {
   background: #fdd;
   text-decoration: none;
   display: block;
 }
-ins { 
+.ins { 
   border: 1px solid #0c0;
 }
-del { 
+.del { 
   border: 1px solid #c00;
+}
+span.diff-leader {
+  display: none;
 }
