@@ -69,6 +69,8 @@ module.
 
 =back
 
+=cut
+
 sub new {
     my $class = shift;
     my $self = bless {}, $class;
