@@ -27,7 +27,6 @@ lib/SVN/Web/Revision.pm
 lib/SVN/Web/RSS.pm
 lib/SVN/Web/Style/common.css
 lib/SVN/Web/Style/styles-hlb.css
-lib/SVN/Web/Style/diff.css
 lib/SVN/Web/Template/default/browse
 lib/SVN/Web/Template/default/diff
 lib/SVN/Web/Template/default/footer
