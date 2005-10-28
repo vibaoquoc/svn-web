@@ -29,6 +29,6 @@
 <br />
 [% END %]
 <pre>
-[% file %]
+[% file | html %]
 </pre>
 </div>
