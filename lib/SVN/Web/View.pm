@@ -52,7 +52,7 @@ sub run {
     return {template => 'view',
 	    data => { rev => $rev,
 		      mimetype => $root->node_prop($self->{path},
-						   'svn:mime-type') || 'text/plain'),
+						   'svn:mime-type') || 'text/plain',
 		      file => <$file>,
 		      %{$self->{REV}},
 		    }};
