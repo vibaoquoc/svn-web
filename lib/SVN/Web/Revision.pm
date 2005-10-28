@@ -5,6 +5,122 @@ use SVN::Core;
 use SVN::Repos;
 use SVN::Fs;
 
+=head1 NAME
+
+SVN::Web::Revision - SVN::Web action to view a repository revision
+
+=head1 SYNOPSIS
+
+In F<config.yaml>
+
+  actions:
+    ...
+    - revision
+    ...
+
+  revision_class: SVN::Web::Revision
+
+=head1 DESCRIPTION
+
+Shows information about a specific revision in a Subversion repository.
+
+=head1 OPTIONS
+
+=over 8
+
+=item rev
+
+The revision to show.  There is no default.
+
+=back
+
+=head1 TEMPLATE VARIABLES
+
+=over 8
+
+=item rev
+
+The revision that is being shown.
+
+=item youngest_rev
+
+The repository's youngest revision.  This is useful when constructing
+C<next revision> and C<previous revision> links.
+
+=item date
+
+The date on which the revision was committed.
+
+=item author
+
+The revision's author.
+
+=item msg
+
+The log message associated with this revision.
+
+=item paths
+
+A hash of hash refs.  Each key is a path name.  The value is a further hash ref
+with the following keys.
+
+=over 8
+
+=item isdir
+
+A boolean value, true if the given path is a directory.
+
+=item diff
+
+The HTML diff for this path (if it was modified in this revision).  The diff
+is generated using L<Text::Diff::HTML>.
+
+A diff is only generated if:
+
+=over 3
+
+=item a)
+
+The file was modified.
+
+=item b)
+
+The file was copied from another file, and the new file and the old
+file have different MD5 checksums.
+
+=back
+
+=item action
+
+A single letter indicating the action that carried out on the path.  A
+file was either added C<A>, modified C<M>, or deleted C<D>.
+
+=item copyfrom
+
+If the file was copied from another file then this is the path of the
+source of the copy.
+
+=item copyfromrev
+
+If the file was copied from another file then this is the revision of
+the file that it was copied form.
+
+=back
+
+=back
+
+=head1 EXCEPTIONS
+
+=over 4
+
+=item C<no revision>
+
+The C<rev> parameter was not given.
+
+=back
+
+=cut
+
 sub new {
     my $class = shift;
     my $self = bless {}, $class;
