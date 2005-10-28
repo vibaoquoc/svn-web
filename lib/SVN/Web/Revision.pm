@@ -32,6 +32,11 @@ Shows information about a specific revision in a Subversion repository.
 
 The revision to show.  There is no default.
 
+=item context
+
+The number of lines of context to show around each change.  Uses the global
+default if not set.
+
 =back
 
 =head1 TEMPLATE VARIABLES
@@ -148,9 +153,11 @@ sub _log {
 }
 
 sub run {
-    my $self = shift;
-    my $pool = SVN::Pool->new_default_sub;
-    my $rev = $self->{cgi}->param('rev') || die 'no revision';
+    my $self    = shift;
+    my $pool    = SVN::Pool->new_default_sub;
+    my $rev     = $self->{cgi}->param('rev') || die 'no revision';
+    my $context = $self->{cgi}->param('context')
+                  || $self->{config}->{diff_context};
 
     $self->{repos}->get_logs (['/'], $rev, $rev, 1, 0,
 			      sub { $self->{REV} = $self->_log(@_)});
@@ -174,7 +181,8 @@ sub run {
 	$self->{REV}->{paths}{$path}{diff} = Text::Diff::diff
 	  ($root2->file_contents($path),
 	   $root1->file_contents($path),
-	   { STYLE => 'Text::Diff::HTML' });
+	   { STYLE => 'Text::Diff::HTML',
+	     CONTEXT => $context, });
 
 	next;
       }
