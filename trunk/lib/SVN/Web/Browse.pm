@@ -4,6 +4,94 @@ use SVN::Core;
 use SVN::Repos;
 use SVN::Fs;
 
+=head1 NAME
+
+SVN::Web::Browse - SVN::Web action to browse a Subversion repository
+
+=head1 SYNOPSIS
+
+In F<config.yaml>
+
+  actions:
+    ...
+    - browse
+    ...
+
+  browse_class: SVN::Web::Browse
+
+=head1 DESCRIPTION
+
+Returns a file/directory listing for the given repository path.
+
+=head1 OPTIONS
+
+=over 4
+
+=item rev
+
+The repository revision to show.  Defaults to the repository's youngest
+revision.
+
+=back
+
+=head1 TEMPLATE VARIABLES
+
+=over 4
+
+=item entries
+
+A list of hash refs, one for each file and directory entry in the browsed
+path.  The list is ordered with directories first, then files, sorted
+alphabetically.
+
+Each hash ref has the following keys.
+
+=over 8
+
+=item path
+
+The entry's full path.
+
+=item rev
+
+The entry's most recent interesting revision.
+
+=item size
+
+The entry's size, in bytes.  The empty string C<''> for directories.
+
+=item type
+
+The entry's C<svn:mime-type> property.  Not set for directories.
+
+=item author
+
+The userid that committed the most recent interesting revision for this
+entry.
+
+=item date
+
+The date of the entry's most recent interesting revision.
+
+=item msg
+
+The log message for the entry's most recent interesting revision.
+
+=back
+
+=item revision
+
+The repository revision that is being browsed.  Will be the same as the
+C<rev> parameter given to the action, unless that parameter was not set,
+in which case it will be the repository's youngest revision.
+
+=back
+
+=head1 EXCEPTIONS
+
+
+=cut
+
 sub new {
     my $class = shift;
     my $self = bless {}, $class;
@@ -16,7 +104,7 @@ sub _log {
     my ($self, $paths, $rev, $author, $date, $msg, $pool) = @_;
     return unless $rev > 0;
 
-    return ($author, $msg);
+    return ($author, $date, $msg);
 }
 
 sub run {
@@ -57,7 +145,7 @@ sub run {
 	# and 'log' properties should be accessible.  But I can't get
 	# the code to work, hence this workaround.
 	$self->{repos}->get_logs([$path], $_->{rev}, $_->{rev}, 0, 1,
-				 sub { ($_->{author}, $_->{msg}) = $self->_log(@_)});
+				 sub { ($_->{author}, $_->{date_modified}, $_->{msg}) = $self->_log(@_)});
 
 	$spool->clear;
     }
