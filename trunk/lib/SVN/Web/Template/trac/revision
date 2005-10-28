@@ -20,7 +20,7 @@
 
 <dl id="overview">
   <dt class="time">Timestamp:</dt>
-  <dd class="time">[% date %]</dd>
+  <dd class="time">[% date.replace('T', ' ').replace('\..+', '').replace('-', '/') %]</dd>
 
   <dt class="author">Author:</dt>
   <dd class="author">[% author || '(no author)' %]</dd>
