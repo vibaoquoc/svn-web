@@ -55,6 +55,13 @@ sub run {
 	  ($root1->file_contents($path),
 	   $root2->file_contents($path),
 	   { STYLE => 'Text::Diff::HTML' });
+
+	$self->{REV}->{paths}{$path}{diff} =~ s/^  //mg;
+	$self->{REV}->{paths}{$path}{diff} =~ s/<span class="ctx">  /<span class="ctx">/mg;
+	$self->{REV}->{paths}{$path}{diff} =~ s/<ins>\+ /<ins>/mg;
+	$self->{REV}->{paths}{$path}{diff} =~ s/<del>- /<del>/mg;
+	$self->{REV}->{paths}{$path}{diff} =~ s/^- //mg;
+	$self->{REV}->{paths}{$path}{diff} =~ s/^\+ //mg;
       }
     }
 
