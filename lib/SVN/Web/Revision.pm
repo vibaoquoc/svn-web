@@ -56,8 +56,8 @@ sub run {
 	next if $kind == $SVN::Node::none;
 
 	$self->{REV}->{paths}{$path}{diff} = Text::Diff::diff
-	  ($root1->file_contents($path),
-	   $root2->file_contents($path),
+	  ($root2->file_contents($path),
+	   $root1->file_contents($path),
 	   { STYLE => 'Text::Diff::HTML' });
 
 	next;
@@ -95,7 +95,9 @@ sub run {
     }
 
     return {template => 'revision',
-	    data => { rev => $rev, %{$self->{REV}}}};
+	    data => { rev => $rev,
+		      youngest_rev => $fs->youngest_rev(),
+		      %{$self->{REV}}}};
 }
 
 1;
