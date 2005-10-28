@@ -142,12 +142,14 @@ sub run {
     }
 
     if($mime eq 'text/html') {
-	$output =~ s/^  //mg;
-	$output =~ s/<span class="ctx">  /<span class="ctx">/mg;
-	$output =~ s/<ins>\+ /<ins>/mg;
-	$output =~ s/<del>- /<del>/mg;
-	$output =~ s/^- //mg;
-	$output =~ s/^\+ //mg;
+	$output =~ s/^  /<span class="diff-leader">  <\/span>/mg;
+	$output =~ s/<span class="ctx">  /<span class="ctx"><span class="diff-leader">  <\/span>/mg;
+	$output =~ s/<ins>\+ /<span class="ins"><span class="diff-leader">+ <\/span>/mg;
+	$output =~ s/<del>- /<span class="del"><span class="diff-leader">- <\/span>/mg;
+	$output =~ s/<\/ins>/<\/span>/mg;
+	$output =~ s/<\/del>/<\/span>/mg;
+	$output =~ s/^- /<span class="diff-leader">- <\/span>/mg;
+	$output =~ s/^\+ /<span class="diff-leader">+ <\/span>/mg;
 
 	return { template => 'diff',
 		 data => { body => $output }};
