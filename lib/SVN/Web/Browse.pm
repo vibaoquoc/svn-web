@@ -12,6 +12,13 @@ sub new {
     return $self;
 }
 
+sub _log {
+    my ($self, $paths, $rev, $author, $date, $msg, $pool) = @_;
+    return unless $rev > 0;
+
+    return ($author, $msg);
+}
+
 sub run {
     my $self = shift;
     my $fs = $self->{repos}->fs;
@@ -43,6 +50,15 @@ sub run {
 	$_->{type} = $root->node_prop ($self->{path}.$_->{name},
 				       'svn:mime-type') unless $_->{isdir};
 	$_->{type} =~ s|/\w+|| if $_->{type};
+
+	# Get the log for this revision of the file
+	#
+	# At least some of this shouldn't be necessary, as the 'last-author'
+	# and 'log' properties should be accessible.  But I can't get
+	# the code to work, hence this workaround.
+	$self->{repos}->get_logs([$path], $_->{rev}, $_->{rev}, 0, 1,
+				 sub { ($_->{author}, $_->{msg}) = $self->_log(@_)});
+
 	$spool->clear;
     }
 
