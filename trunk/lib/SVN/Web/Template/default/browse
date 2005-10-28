@@ -1,4 +1,3 @@
-<div class="blogbody">
 <div class="title">
 [%|l(path, revision)%]browsing %1 (of revision %2)[%END%]
 <a href="[% script %]/[% repos %]/log[% path %]">[%|l%](history of this directory)[%END%]</a>
@@ -40,7 +39,4 @@
 </tr>
 [% END %]
 </tbody>
-
 </table>
-
-</div>

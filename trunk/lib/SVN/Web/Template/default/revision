@@ -1,4 +1,3 @@
-<div class="blogbody">
 <div class="title">
 [%|l(rev)%]revision %1[%END%] - [% author || '(no author)' %] - [% date %]:<br />
 </div>
@@ -40,13 +39,12 @@
 [% FOREACH path = paths %]
 [% IF path.value.action == 'M' %]
 <b><a name="[% path.key %]">[% path.key %]</a></b><br />
-[% path.value.diff %]
+<pre>[% path.value.diff %]</pre>
 [% END %]
 [% IF path.value.action == 'A' %]
 [% IF path.value.diff %]
 <b><a name="[% path.key %]">[% path.key %]</a></b><br />
-[% path.value.diff %]
+<pre>[% path.value.diff %]</pre>
 [% END %]
 [% END %]
 [% END %]
-</div>
