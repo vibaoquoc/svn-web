@@ -28,11 +28,24 @@
       [% END %]</td>
     <td class="chgset"><a href="[% script %]/[% repos %]/revision/?rev=[% rev %]">[% rev %]</a></td>
     <td class="author">[% author || '(no author)' %]</td>
-    <td class="diff">[% UNLESS isdir %]
+    <td class="diff">[% UNLESS isdir || loop.count == loop.size %]
         [% prev = loop.count %]
         <a href="[% script %]/[% repos %]/diff[% path %]?rev1=[% rev - 1 %]&rev2=[% rev %]">HTML</a> | <a href="[% script %]/[% repos %]/diff[% path %]?rev1=[% rev - 1 %]&rev2=[% rev %]&mime=text/plain">TEXT</a><br/>
       [% END %]</th>
-    <td class="summary">[% msg | html | html_line_break %]<br />
+    <td class="summary"><p>[% msg | html | html_line_break %]</p>
+
+      [% FOREACH pk = paths %]
+        [% IF pk.value.isdir %]
+          [% IF pk.value.copyfrom %]
+            Copied from <a href="[% script %]/[% repos %]/browse[% pk.value.copyfrom %]/?rev=[% pk.value.copyfromrev %]">[%|l(pk.value.copyfrom, pk.value.copyfromrev)%]%1:%2[%END%]</a><br />
+          [% END %]
+        [% ELSE %]
+          [% IF pk.value.copyfrom %]
+            Copied from <a href="[% script %]/[% repos %]/log[% pk.value.copyfrom %]?rev=[% pk.value.copyfromrev %]">[%|l(pk.value.copyfrom, pk.value.copyfromrev)%]%1:%2[%END%]</a><br />
+          [% END %]
+        [% END %]
+      [% END %]
+
 <!--
       [% FOREACH pk = paths %]
         [% pk.value.action %] -
