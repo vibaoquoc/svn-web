@@ -35,7 +35,7 @@ sub run {
     my $pool = SVN::Pool->new_default_sub;
     my $rev = $self->{cgi}->param('rev') || die 'no revision';
 
-    $self->{repos}->get_logs ([], $rev, $rev, 1, 0,
+    $self->{repos}->get_logs (['/'], $rev, $rev, 1, 0,
 			      sub { $self->{REV} = $self->_log(@_)});
     return {template => 'revision',
 	    data => { rev => $rev, %{$self->{REV}}}};
