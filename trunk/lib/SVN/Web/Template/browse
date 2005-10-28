@@ -31,15 +31,10 @@
 <a href="[% script %]/[% repos %]/browse[% path %][% name %]/">[% name %]</a>
 [% ELSE %]
 <a href="[% script %]/[% repos %]/checkout[% path %][% name %]?rev=[% rev %]"><img border="0" src="/icons/[% type || 'text' %].gif" /></a>
-<a href="[% script %]/[% repos %]/log[% path %][% name %]">[% name %]</a>
+<a href="[% script %]/[% repos %]/view[% path %][% name %]">[% name %]</a>
 [% END %]</td>
-<td class="revision">
-[% IF isdir %]
-<a href="[% script %]/[% repos %]/browse[% path %][% name %]/">
-[% ELSE %]
-<a href="[% script %]/[% repos %]/log[% path %][% name %]">
-[% END %]
-[% rev %]</a></td>
+<td class="revision"><a href="[% script %]/[% repos %]/revision?rev=[% rev %]">[% rev %]</a>
+</td>
 <td class="age">Unimpl</td>
 <td class="size">[% size %]</td>
 </tr>
