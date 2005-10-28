@@ -1,5 +1,3 @@
-[% USE date %]
-
 <div class="title">(<a href="[% script %]/[% repos %]/rss[% path %]">[%|l%]RSS[%END%]</a>)</div>
 
 <div class="title"><form>
@@ -32,7 +30,7 @@
         [% prev = loop.count %]
         <a href="[% script %]/[% repos %]/diff[% path %]?rev1=[% rev - 1 %]&rev2=[% rev %]">HTML</a> | <a href="[% script %]/[% repos %]/diff[% path %]?rev1=[% rev - 1 %]&rev2=[% rev %]&mime=text/plain">TEXT</a><br/>
       [% END %]</th>
-    <td class="summary"><p>[% msg | html | html_line_break %]</p>
+    <td class="summary"><p>[% msg | log_msg %]</p>
 
       [% FOREACH pk = paths %]
         [% IF pk.value.isdir %]

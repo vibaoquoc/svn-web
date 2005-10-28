@@ -34,7 +34,7 @@ branchpoint for
 [%|l%](diff with previous)[%END%]: <a href="[% script %]/[% repos %]/diff[% path %]?rev1=[% revs.$prev.rev %]&rev2=[% rev %]">HTML</a> | <a href="[% script %]/[% repos %]/diff[% path %]?rev1=[% revs.$prev.rev %]&rev2=[% rev %]&mime=text/plain">TEXT</a><br/>
 [% END %]
 <p>
-[% msg | html | html_line_break %]
+[% msg | log_msg %]
 </p>
 [% FOREACH pk = paths %]
 [% pk.value.action %] -

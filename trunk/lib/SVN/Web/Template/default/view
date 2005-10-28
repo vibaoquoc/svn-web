@@ -4,7 +4,7 @@
 <a href="[% script %]/[% repos %]/revision?rev=[% rev %]">[%|l(rev)%]revision %1[%END%]</a> - [% author || '(no author)' %] - [% date %]:<br />
 </div>
 <p>
-[% msg | html | html_line_break %]
+[% msg | log_msg %]
 </p>
 [% FOREACH file = paths %]
 [% file.value.action %] -

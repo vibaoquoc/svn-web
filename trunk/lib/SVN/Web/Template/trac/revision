@@ -26,7 +26,7 @@
   <dd class="author">[% author || '(no author)' %]</dd>
 
   <dt class="message">Message:</dt>
-  <dd class="message"><p>[% msg | html | html_line_break %]</p></dd>
+  <dd class="message"><p>[% msg | log_msg %]</p></dd>
 
   <dt class="files">Files:</dt>
   <dd class="files">
