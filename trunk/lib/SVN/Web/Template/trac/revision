@@ -11,7 +11,8 @@
       <li class="first[% rev == youngest_rev ? ' last': '' %]"><a href="[% script %]/[% repos %]/revision?rev=[% rev - 1 %]">Previous Revision</a></li>
     [% END %]
     [% IF rev != youngest_rev %]
-      <li class="first last"><a href="[% script %]/[% repos %]/revision?rev=[% rev + 1 %]">Next Revision</a></li>
+      <li class="first"><a href="[% script %]/[% repos %]/revision?rev=[% rev + 1 %]">Next Revision</a></li>
+      <li class="first last"><a href="[% script %]/[% repos %]/revision?rev=[% youngest_rev %]">Most Recent</a></li>
     [% END %]
   </ul>
 </div>
