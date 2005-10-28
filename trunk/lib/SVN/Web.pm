@@ -248,7 +248,7 @@ Naturally, you would submit this back to the maintainers so that it can
 be included in the standard distribution.
 
 If an action is listed in C<actions> and there is no corresponding C<<
-<action>_class > directive then SVN::Web takes the action name,
+<action>_class >> directive then SVN::Web takes the action name,
 converts the first character to uppercase, and then looks for an C<<
 SVN::Web::<Action> >> package.
 
