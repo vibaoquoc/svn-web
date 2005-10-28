@@ -230,7 +230,7 @@ sub mod_perl_output {
 our $pool; # global pool for holding opened repos
 
 sub get_template {
-    Template->new ({ INCLUDE_PATH => ($config->{templatedir} || 'template/default'),
+    Template->new ({ INCLUDE_PATH => ($config->{templatedir} || 'template/default/'),
 		     PRE_PROCESS => 'header',
 		     POST_PROCESS => 'footer',
 		     FILTERS => { l => ([\&loc_filter, 1]) } });
