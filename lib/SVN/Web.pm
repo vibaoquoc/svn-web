@@ -247,6 +247,11 @@ Subversion C<annotate> command.  If you implement this, you would write:
 Naturally, you would submit this back to the maintainers so that it can
 be included in the standard distribution.
 
+If an action is listed in C<actions> and there is no corresponding C<<
+<action>_class > directive then SVN::Web takes the action name,
+converts the first character to uppercase, and then looks for an C<<
+SVN::Web::<Action> >> package.
+
 =head2 CGI class
 
 SVN::Web can use a custom CGI class.  By default SVN::Web will use CGI::Fast
@@ -538,7 +543,7 @@ sub run_cgi {
 	$path ||= '';
 
 	die "action '$action' not supported" 
-	  unless scalar grep(/^$action$/, @{$config->{actions}});
+	  unless scalar grep(lc($_) eq lc($action), @{$config->{actions}});
 
 	run ({ repos => $repos,
 	       action => $action,
