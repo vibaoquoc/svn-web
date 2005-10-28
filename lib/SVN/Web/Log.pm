@@ -53,7 +53,7 @@ sub traverse_history {
 sub run {
     my $self = shift;
     my $pool = SVN::Pool->new_default_sub;
-    my $limit = $self->{cgi}->param('limit') || 10;
+    my $limit = $self->{cgi}->param('limit') || 20;
     my $fs = $self->{repos}->fs;
     my $root = $fs->revision_root ($fs->youngest_rev);
     my $endrev = 0;
