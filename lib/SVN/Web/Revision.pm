@@ -39,11 +39,13 @@ sub run {
     $self->{repos}->get_logs (['/'], $rev, $rev, 1, 0,
 			      sub { $self->{REV} = $self->_log(@_)});
 
+    my $fs = $self->{repos}->fs();
+
     # Generate the diffs for each file
     foreach my $path (keys %{$self->{REV}->{paths}}) {
       if($self->{REV}->{paths}{$path}{action} eq 'M') {
-	my $root1 = $self->{repos}->fs()->revision_root($rev);
-	my $root2 = $self->{repos}->fs()->revision_root($rev - 1);
+	my $root1 = $fs->revision_root($rev);
+	my $root2 = $fs->revision_root($rev - 1);
 
 	my $kind;
 	$kind = $root1->check_path($path);
@@ -56,6 +58,31 @@ sub run {
 	   $root2->file_contents($path),
 	   { STYLE => 'Text::Diff::HTML' });
 
+	next;
+      }
+
+      # If the file was added it may have been copied from another file.
+      # Find out if it was, and if it was, do a diff between the two files.
+      # If there were any changes then show them
+      if(($self->{REV}->{paths}{$path}{action} eq 'A') and
+	 defined $self->{REV}->{paths}{$path}{copyfrom}) {
+	my $src = $self->{REV}->{paths}{$path}{copyfrom};
+
+	my $root1 = $fs->revision_root($rev);
+	my $root2 = $fs->revision_root($self->{REV}->{paths}{$path}{copyfromrev});
+
+	# If the files have differing MD5s then do a diff
+	if($root1->file_md5_checksum($path) ne $root2->file_md5_checksum($src)) {
+	  $self->{REV}->{paths}{$path}{diff} = Text::Diff::diff
+	    ($root2->file_contents($src),
+	     $root1->file_contents($path),
+	     { STYLE => 'Text::Diff::HTML' });
+	}
+
+	next;
+      }
+    } continue {
+      if(defined $self->{REV}->{paths}{$path}{diff}) {
 	$self->{REV}->{paths}{$path}{diff} =~ s/^  //mg;
 	$self->{REV}->{paths}{$path}{diff} =~ s/<span class="ctx">  /<span class="ctx">/mg;
 	$self->{REV}->{paths}{$path}{diff} =~ s/<ins>\+ /<ins>/mg;

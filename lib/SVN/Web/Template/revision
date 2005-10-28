@@ -21,6 +21,11 @@
 [% IF path.value.action == 'M' %]
 <a href="#[% path.key %]">[%|l%](diff)[%END%]</a>
 [% END %]
+[% IF path.value.action == 'A' %]
+[% IF path.value.diff %]
+<a href="#[% path.key %]">[%|l%](diff)[%END%]</a>
+[% END %]
+[% END %]
 <a href="[% script %]/[% repos %]/checkout[% path.key %]?rev=[% rev %]">[%|l%](checkout)[%END%]</a>
 [% END %]
 [% IF path.value.copyfrom %]
@@ -37,6 +42,11 @@
 <b><a name="[% path.key %]">[% path.key %]</a></b><br />
 [% path.value.diff %]
 [% END %]
+[% IF path.value.action == 'A' %]
+[% IF path.value.diff %]
+<b><a name="[% path.key %]">[% path.key %]</a></b><br />
+[% path.value.diff %]
 [% END %]
-
+[% END %]
+[% END %]
 </div>
