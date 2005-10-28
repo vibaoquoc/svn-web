@@ -1,4 +1,3 @@
-<div class="blogbody">
 <div class="title">
 [%|l(path)%]history for path %1[%END%] <a href="[% script %]/[% repos %]/rss[% path %]">[%|l%](track)[%END%]</a>
 [% IF isdir %]
@@ -6,7 +5,7 @@
 [% END %]
 </div>
 <div class="title">
-[%|l%]Show last[%END%]<form><input name="limit" size=4 value="[% limit %]">changes<input type="submit" name="submit" value="[%|l%]Show[%END%]"></form>
+<form>[%|l%]Show last[%END%] <input name="limit" size=4 value="[% limit %]">changes<input type="submit" name="submit" value="[%|l%]Show[%END%]"></form>
 </div>
 [% FOREACH revs %]
 <hr />
@@ -59,4 +58,3 @@ branchpoint for
 <br />
 [% END %]
 [% END %]
-</div>

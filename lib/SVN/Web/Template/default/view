@@ -1,4 +1,3 @@
-<div class="blogbody">
 <p><a href="[% script %]/[% repos %]/log[% path %]">Revision Log</a></p>
 <div class="title">
 <a href="[% script %]/[% repos %]/revision?rev=[% rev %]">[%|l(rev)%]revision %1[%END%]</a> - [% author || '(no author)' %] - [% date %]:<br />
@@ -6,23 +5,23 @@
 <p>
 [% msg | log_msg %]
 </p>
-[% FOREACH file = paths %]
-[% file.value.action %] -
-[% IF file.value.isdir %]
-<a href="[% script %]/[% repos %]/browse[% file.key %]/?rev=[% rev %]">[% file.key %]</a>
-[% IF file.value.copyfrom %]
-<a href="[% script %]/[% repos %]/browse[% file.value.copyfrom %]/?rev=[% file.value.copyfromrev %]">[%|l(file.value.copyfrom, file.value.copyfromrev)%](from %1:%2)[%END%]</a>
+[% FOREACH pk = paths %]
+[% pk.value.action %] -
+[% IF pk.value.isdir %]
+<a href="[% script %]/[% repos %]/browse[% pk.key %]/?rev=[% rev %]">[% pk.key %]</a>
+[% IF pk.value.copyfrom %]
+<a href="[% script %]/[% repos %]/browse[% pk.value.copyfrom %]/?rev=[% pk.value.copyfromrev %]">[%|l(pk.value.copyfrom, pk.value.copyfromrev)%](from %1:%2)[%END%]</a>
 [% END %]
 
 [% ELSE %]
-[% IF file.value.action == 'D' %]
-[% file.key %]
+[% IF pk.value.action == 'D' %]
+[% pk.key %]
 [% ELSE %]
-<a href="[% script %]/[% repos %]/view[% file.key %]?rev=[% rev %]">[% file.key %]</a>
-<a href="[% script %]/[% repos %]/checkout[% file.key %]?rev=[% rev %]">[%|l%](checkout)[%END%]</a>
+<a href="[% script %]/[% repos %]/view[% pk.key %]?rev=[% rev %]">[% pk.key %]</a>
+<a href="[% script %]/[% repos %]/checkout[% pk.key %]?rev=[% rev %]">[%|l%](checkout)[%END%]</a>
 [% END %]
-[% IF file.value.copyfrom %]
-<a href="[% script %]/[% repos %]/view[% file.value.copyfrom %]?rev=[% file.value.copyfromrev %]">[%|l(file.value.copyfrom, file.value.copyfromrev)%](from %1:%2)[%END%]</a>
+[% IF pk.value.copyfrom %]
+<a href="[% script %]/[% repos %]/view[% pk.value.copyfrom %]?rev=[% pk.value.copyfromrev %]">[%|l(pk.value.copyfrom, pk.value.copyfromrev)%](from %1:%2)[%END%]</a>
 [% END %]
 [% END %]
 
