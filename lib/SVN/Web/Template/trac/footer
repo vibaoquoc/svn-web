@@ -1,6 +1,6 @@
   </div>
   <div id="footer">
     <hr />
-    <p class="right"><em>[%|l%]Powered by SVN::Web[%END%]</em></p>
+    <p class="right"><em><a href="http://search.cpan.org/~clkao/SVN-Web/"><em>[%|l%]Powered by SVN::Web[%END%]</a></em></p>
   </div>
 </html>
