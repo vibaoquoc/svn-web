@@ -48,7 +48,6 @@ diff.
 SVN::Web also tracks the branching feature (node copy) of subversion,
 so you can easily see the relationship between branches.
 
-
 =head1 CONFIGURATION
 
 Various aspects of SVN::Web's behaviour can be controlled through the
@@ -79,6 +78,16 @@ from being browseable by specifying the C<block> setting.
   block:
     - 'first_subdir_to_block'
     - 'second_subdir_to_block'
+
+=head2 Diffs
+
+When showing differences between files, SVN::Web can show a customisable
+amount of context around the changes.
+
+The default number of lines to show is 3.  To change this globally set
+C<diff_context>.
+
+  diff_context: 4
 
 =head2 Templates
 
@@ -350,8 +359,7 @@ my $config;
 
 my %REPOS;
 
-our @DEFAULT_ACTIONS
-  = qw(browse checkout diff list log revision RSS view);
+our @DEFAULT_ACTIONS = qw(browse checkout diff list log revision RSS view);
 
 sub load_config {
     my $file = shift || 'config.yaml';
@@ -520,6 +528,7 @@ sub run_cgi {
     $template ||= get_template ();
 
     $config->{actions} ||= \@DEFAULT_ACTIONS;
+    $config->{diff_context} ||= 3;
 
     my $cgi_class = $config->{cgi_class} || (eval { require CGI::Fast; 1 } ? 'CGI::Fast' : 'CGI');
     while (my $cgi = $cgi_class->new) {

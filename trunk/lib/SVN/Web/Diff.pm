@@ -46,6 +46,11 @@ The desired output format.  The default is C<html> for an HTML, styled diff
 using L<Text::Diff::HTML>.  The other allowed value is C<text>, for a plain
 text unified diff.
 
+=item context
+
+The number of lines of context to show around each change.  Uses the global
+default if not set.
+
 =back
 
 =head1 TEMPLATE VARIABLES
@@ -80,12 +85,14 @@ sub new {
 }
 
 sub run {
-    my $self = shift;
-    my $pool = SVN::Pool->new_default_sub;
-    my $fs = $self->{repos}->fs;
-    my $rev1 = $self->{cgi}->param('rev1');
-    my $rev2 = $self->{cgi}->param('rev2');
-    my $mime = $self->{cgi}->param('mime') || 'text/html';
+    my $self    = shift;
+    my $pool    = SVN::Pool->new_default_sub;
+    my $fs      = $self->{repos}->fs;
+    my $rev1    = $self->{cgi}->param('rev1');
+    my $rev2    = $self->{cgi}->param('rev2');
+    my $mime    = $self->{cgi}->param('mime') || 'text/html';
+    my $context = $self->{cgi}->param('context')
+                  || $self->{config}->{diff_context};
 
     my $root1 = $fs->revision_root ($rev1);
     my $root2 = $fs->revision_root ($rev2);
@@ -130,7 +137,8 @@ sub run {
 	$output = Text::Diff::diff
 	    ($root1->file_contents ($self->{path}),
 	     $root2->file_contents ($self->{path}),
-	     { STYLE => $style });
+	     { STYLE => $style,
+	       CONTEXT => $context, });
     }
 
     if($mime eq 'text/html') {
