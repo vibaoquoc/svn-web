@@ -24,7 +24,7 @@ sub run {
     my $fs = $self->{repos}->fs;
     my $rev = $self->{cgi}->param('rev') || $fs->youngest_rev;
     if ($self->{path} !~ m|/$|) {
-	return 'internal server error';
+        print $self->{cgi}->redirect(-uri => $self->{cgi}->self_url() . '/');
     }
     my $path = $self->{path};
     $path =~ s|/$|| unless $path eq '/';
