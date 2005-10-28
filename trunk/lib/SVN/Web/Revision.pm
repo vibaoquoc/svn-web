@@ -43,6 +43,8 @@ sub run {
 
     # Generate the diffs for each file
     foreach my $path (keys %{$self->{REV}->{paths}}) {
+      next if $self->{REV}->{paths}{$path}{isdir};
+
       if($self->{REV}->{paths}{$path}{action} eq 'M') {
 	my $root1 = $fs->revision_root($rev);
 	my $root2 = $fs->revision_root($rev - 1);
