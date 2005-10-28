@@ -9,6 +9,66 @@ use SVN::Fs;
 
 eval 'use SVN::DiffEditor 0.09; require IO::String; 1' and my $has_svk = 1;
 
+=head1 NAME
+
+SVN::Web::Diff - SVN::Web action to show differences between file revisions
+
+=head1 SYNOPSIS
+
+In F<config.yaml>
+
+  actions:
+    ...
+    - diff
+    ...
+
+  diff_class: SVN::Web::Diff
+
+=head1 DESCRIPTION
+
+Returns the difference between two revisions of the same file.
+
+=head1 OPTIONS
+
+=over 8
+
+=item rev1
+
+The first revision of the file to compare.
+
+=item rev2
+
+The second revision of the file to compare.
+
+=item mime
+
+The desired output format.  The default is C<html> for an HTML, styled diff
+using L<Text::Diff::HTML>.  The other allowed value is C<text>, for a plain
+text unified diff.
+
+=back
+
+=head1 TEMPLATE VARIABLES
+
+None.  If C<mime> is C<html> then raw HTML is returned for immediate insertion
+in to the template.  If C<mime> is C<text> then the template is bypassed and
+plain text is returned.
+
+=head1 EXCEPTIONS
+
+=over 4
+
+=item C<path does not exist>
+
+The file does not exist in C<rev1> of the repository.
+
+=item C<directory diff requires svk>
+
+Showing the difference between two directories needs the SVN::DiffEditor
+module.
+
+=back
+
 sub new {
     my $class = shift;
     my $self = bless {}, $class;
