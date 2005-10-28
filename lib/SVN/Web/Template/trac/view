@@ -6,35 +6,14 @@
 [%|l%]Revision[%END%] <a href="[% script %]/[% repos %]/revision?rev=[% rev %]">[% rev %]</a> (by [% author || '(no author)' %], [% date.replace('T', ' ').replace('\..+', '').replace('-', '/') %])</th>
     <td class="message">[% msg | html | html_line_break %]</td>
   </tr>
-
-<!-- Not sure this is a good idea 
-  <tr>
-    <td></td>
-    <td class="status-list">
-      [% FOREACH path = paths %]
-        [% path.value.action %] -
-        [% IF path.value.isdir %]
-          <a href="[% script %]/[% repos %]/browse[% path.key %]/?rev=[% rev %]">[% path.key %]</a>
-          [% IF path.value.copyfrom %]
-            <a href="[% script %]/[% repos %]/browse[% path.value.copyfrom %]/?rev=[% path.value.copyfromrev %]">[%|l(path.value.copyfrom, path.value.copyfromrev)%](from %1:%2)[%END%]</a>
-          [% END %]
-        [% ELSE %]
-          [% IF path.value.action == 'D' %]
-            [% path.key %]
-          [% ELSE %]
-            <a href="[% script %]/[% repos %]/view[% path.key %]?rev=[% rev %]">[% path.key %]</a>
-            <a href="[% script %]/[% repos %]/checkout[% path.key %]?rev=[% rev %]">[%|l%](checkout)[%END%]</a>
-          [% END %]
-          [% IF path.value.copyfrom %]
-            <a href="[% script %]/[% repos %]/view[% path.value.copyfrom %]?rev=[% path.value.copyfromrev %]">[%|l(path.value.copyfrom, path.value.copyfromrev)%](from %1:%2)[%END%]</a>
-          [% END %]
-        [% END %]<br />
-      [% END %]
-    </td>
-  </tr> -->
 </table>
+
 <div id="preview">
-  <pre class="code-block">
-[% file | html %]
-  </pre>
+  [% IF mimetype.match('^text/') %]
+    <pre class="code-block">[% file | html %]</pre>
+  [% ELSIF mimetype.match('^image/') %]
+    <img src="[% script %]/[% repos %]/checkout[% path %]" />
+  [% ELSE %]
+<p>This file can not be displayed in the browser.  You can <a href="[% script %]/[% repos %]/checkout[% path %]">download it</a>.</p>
+  [% END %]
 </div>
