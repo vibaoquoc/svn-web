@@ -6,6 +6,8 @@
 }
 .file .hunk .ctx {
   background: #eee;
+  font-family: monospace;
+  white-space: pre;
 }
 .file .hunk ins { 
   background: #dfd; 
