@@ -1,5 +1,5 @@
 <html><head>
-<title>SVN::Web</title>
+<title>[% action %]: /[% repos %][% path %] ([% IF rev %]Rev: [% rev %], [% END %]via SVN::Web)</title>
 [% IF style %]
 <link rel="stylesheet" href="[% style %]" type="text/css" />
 [% ELSE %]
