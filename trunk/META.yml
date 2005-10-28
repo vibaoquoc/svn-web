@@ -1,5 +1,5 @@
 name: SVN-Web
-version: 0.38
+version: 0.39
 abstract: Subversion repository web frontend
 author: Chia-liang Kao <clkao@clkao.org>
 license: perl
@@ -9,8 +9,9 @@ requires:
   YAML: 0
   XML::RSS: 0
   Text::Diff: 0
+  Text::Diff::HTML: 0
   Locale::Maketext::Simple: 0
 no_index:
   directory:
     - inc
-generated_by: Module::Install version 0.36
+generated_by: Module::Install version 0.37

@@ -1,46 +1,41 @@
-<div class="blogbody">
-<div class="title">
-[%|l(path, revision)%]browsing %1 (of revision %2)[%END%]
-<a href="[% script %]/[% repos %]/log[% path %]">[%|l%](history of this directory)[%END%]</a>
-[% IF branchto %]
-<hr>
-[%|l%]Branch to:[%END%]
-[% FOR branchto %]
-<a href="[% script %]/[% repos %]/browse[% dst %]">[% dst %]</a>:
-<a href="[% script %]/[% repos %]/revision/?rev=[% dstrev %]">[% dstrev %]</a> [%|l(srcrev)%](from revision %1)[%END%]
-[% END %]
-[% END %]
-[% IF branchfrom %]
-<hr>
-[%|l%]Branch from:[%END%]
-[% FOR branchfrom %]
-<a href="[% script %]/[% repos %]/browse[% src %]">[% src %]</a>:[% srcrev %] <a href="[% script %]/[% repos %]/revision/?rev=[% dstrev %]">[%|l(dstrev)%](to revision %1)[%END%]</a>
-[% END %]
-[% END %]
-</div>
-<table border=0 width="90%" class="entries">
-<thead>
-<tr><th>[%|l%]name[%END%]</th><th>[%|l%]revision[%END%]</th><th>[%|l%]age[%END%]</th><th>[%|l%]size[%END%]</th></tr>
-</thead>
-<tbody>
-[% FOREACH entries %]
-<tr>
-<td class="name">
-[% IF isdir %]
-<img border="0" src="/icons/dir.gif" />
-<a href="[% script %]/[% repos %]/browse[% path %][% name %]/">[% name %]</a>
-[% ELSE %]
-<a href="[% script %]/[% repos %]/checkout[% path %][% name %]?rev=[% rev %]"><img border="0" src="/icons/[% type || 'text' %].gif" /></a>
-<a href="[% script %]/[% repos %]/view[% path %][% name %]">[% name %]</a>
-[% END %]</td>
-<td class="revision"><a href="[% script %]/[% repos %]/revision?rev=[% rev %]">[% rev %]</a>
-</td>
-<td class="age">Unimpl</td>
-<td class="size">[% size %]</td>
-</tr>
-[% END %]
-</tbody>
+[% USE Number.Format %]
 
+<div id="jumprev">
+  <form action="" method="get">
+   <div>
+    <label for="rev">View revision:</label>
+    <input type="text" id="rev" name="rev" value="[% revision %]" size="4" />
+   </div>
+  </form>
+</div>
+
+<div class="title"><a href="[% script %]/[% repos %]/log[% path %]">[%|l%]Revision Log[%END%]</a></div>
+
+<table class="listing" id="dirlist">
+  <thead>
+    <tr>
+      <th class="name">[%|l%]Name[%END%]</th>
+      <th class="rev">[%|l%]Rev[%END%]</th>
+      <th class="age">[%|l%]Age[%END%]</th>
+      <th class="size">[%|l%]Size[%END%]</th>
+      <th class="change">[%|l%]Last Change[%END%]</th>
+    </tr>
+  </thead>
+  <tbody>
+  [% FOREACH entries %]
+    <tr class="[% loop.count % 2 ? "even" : "odd" %]">
+      <td class="name">
+      [% IF isdir %]
+          <a class="dir" href="[% script %]/[% repos %]/browse[% path %][% name %]/">[% name %]/</a>
+      [% ELSE %]
+        <a class="file" href="[% script %]/[% repos %]/view[% path %][% name %]">[% name %]</a>
+      [% END %]
+      </td>
+      <td class="rev"><a href="[% script %]/[% repos %]/revision?rev=[% rev %]">[% rev %]</a></td>
+      <td class="age">Unimpl</td>
+      <td class="size">[% IF ! isdir; size | format_bytes; END %]</td>
+      <td class="change"><span class="author">[% author %]:</span> <span class="change">[% msg | truncate(100) | html %]</span></td>
+    </tr>
+  [% END %]
+  </tbody>
 </table>
-
-</div>
