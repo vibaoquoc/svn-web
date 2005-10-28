@@ -1,36 +1,31 @@
 #!/usr/bin/perl
-my $required_svn = '1.0.7';
+my $required_svn = '1.0.4';
 
 use inc::Module::Install;
 
-name		('SVN-Mirror');
+name		('SVN-Web');
 author		('Chia-liang Kao <clkao@clkao.org>');
-abstract	('Mirror remote repositories to local subversion repository');
+abstract	('Subversion repository web frontend');
+install_script  ('bin/svnweb-install');
 license		('perl');
-version_from	('lib/SVN/Mirror.pm');
-install_script	('bin/svm');
-clean_files	(qw't/repos* tmp vcp*');
+version_from	('lib/SVN/Web.pm');
+clean_files	(qw't/repos*');
 requires(
-        'SVN::Core'   => $required_svn,
-        'URI::Escape' => '0',
-        'Term::ReadKey' => '0',
-        'SVN::Simple::Edit' => '0',
-        'Date::Format' => '0',
-        'File::chdir' => '0',
-        'Class::Accessor' => '0',
-);
-features(
-    'VCP support' => [
-	-default => 0,
-        'VCP' => '0.9',
-        (($^O eq 'MSWin32') ? 'Win32API::GUID' : 'Data::UUID') => 0,
-    ],
-) unless $^O eq 'MSWin32'; # VCP support currently requires symlinks
+        'Template'    => '0',
+        'YAML'        => '0',
+        'XML::RSS'    => '0',
+        'Text::Diff'  => '0',
+	'Locale::Maketext::Simple' => 0);
 
 include('ExtUtils::AutoInstall');
 auto_install();
 
 WriteAll( sign => 1 );
 
-die "SVN::Core $required_svn must be manually installed"
-    unless eval {require SVN::Core} && $SVN::Core::VERSION >= $required_svn;
+$::VERSION = $required_svn;
+die << "." unless eval {require SVN::Core; SVN::Core->VERSION >= main->VERSION };
+===> Warning: SVN::Core missing or outdated.
+Please manually install SVN::Core by compiling Subversion
+(version $required_svn or above) with SWIG/Perl bindings,
+and try this installation process again.
+.
