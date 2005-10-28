@@ -36,23 +36,23 @@ branchpoint for
 <p>
 [% msg | html | html_line_break %]
 </p>
-[% FOREACH path = paths %]
-[% path.value.action %] -
-[% IF path.value.isdir %]
-<a href="[% script %]/[% repos %]/browse[% path.key %]/?rev=[% rev %]">[% path.key %]</a>
-[% IF path.value.copyfrom %]
-<a href="[% script %]/[% repos %]/browse[% path.value.copyfrom %]/?rev=[% path.value.copyfromrev %]">[%|l(path.value.copyfrom, path.value.copyfromrev)%](from %1:%2)[%END%]</a>
+[% FOREACH pk = paths %]
+[% pk.value.action %] -
+[% IF pk.value.isdir %]
+<a href="[% script %]/[% repos %]/browse[% pk.key %]/?rev=[% rev %]">[% pk.key %]</a>
+[% IF pk.value.copyfrom %]
+<a href="[% script %]/[% repos %]/browse[% pk.value.copyfrom %]/?rev=[% pk.value.copyfromrev %]">[%|l(pk.value.copyfrom, pk.value.copyfromrev)%](from %1:%2)[%END%]</a>
 [% END %]
 
 [% ELSE %]
-[% IF path.value.action == 'D' %]
-[% path.key %]
+[% IF pk.value.action == 'D' %]
+[% pk.key %]
 [% ELSE %]
-<a href="[% script %]/[% repos %]/log[% path.key %]#rev[% rev %]">[% path.key %]</a>
-<a href="[% script %]/[% repos %]/checkout[% path.key %]?rev=[% rev %]">[%|l%](checkout)[%END%]</a>
+<a href="[% script %]/[% repos %]/log[% pk.key %]#rev[% rev %]">[% pk.key %]</a>
+<a href="[% script %]/[% repos %]/checkout[% pk.key %]?rev=[% rev %]">[%|l%](checkout)[%END%]</a>
 [% END %]
-[% IF path.value.copyfrom %]
-<a href="[% script %]/[% repos %]/log[% path.value.copyfrom %]#rev[% path.value.copyfromrev %]">[%|l(path.value.copyfrom, path.value.copyfromrev)%](from %1:%2)[%END%]</a>
+[% IF pk.value.copyfrom %]
+<a href="[% script %]/[% repos %]/log[% pk.value.copyfrom %]#rev[% pk.value.copyfromrev %]">[%|l(pk.value.copyfrom, pk.value.copyfromrev)%](from %1:%2)[%END%]</a>
 [% END %]
 [% END %]
 
