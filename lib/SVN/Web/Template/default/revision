@@ -3,7 +3,7 @@
 [%|l(rev)%]revision %1[%END%] - [% author || '(no author)' %] - [% date %]:<br />
 </div>
 <p>
-[% msg | html | html_line_break %]
+[% msg | log_msg %]
 </p>
 [% FOREACH path = paths %]
 [% path.value.action %] -

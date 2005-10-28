@@ -38,6 +38,17 @@ while (my ($from, $to) = each %targets) {
 }
 
 print $fh <<END;
+# Suggested minimum filters to run log messages through.
+log_msg_filters:
+  - name: standard
+    filter: html
+  - name: standard
+    filter: html_line_break
+  - name: Clickable
+    filter: clickable
+  - name: Clickable::Email
+    filter: filter
+
 # set your repository path below:
 #
 #repos:
