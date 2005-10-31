@@ -171,6 +171,14 @@ sub run {
     my $limit = $self->{cgi}->param('limit') || 20;
     my $rev   = $self->{cgi}->param('rev') || $fs->youngest_rev();
     my $root = $fs->revision_root ($rev);
+
+    my $kind = $root->check_path($self->{path});
+    if($kind == $SVN::Node::dir) {
+      if($self->{path} !~ m|/$|) {
+	print $self->{cgi}->redirect(-uri => $self->{cgi}->self_url() . '/');
+      }
+    }
+
     my $endrev = 0;
     if ($limit) {
 	my $left = $limit;
