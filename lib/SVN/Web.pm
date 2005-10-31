@@ -572,6 +572,8 @@ sub loc_filter {
 sub log_msg_filter {
   my $text = shift;
 
+  return $text if ! defined $config->{log_msg_filters};
+
   my $plugin;
   my @filters = @{ $config->{log_msg_filters} };
   my $context = $template->context();
