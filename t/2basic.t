@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use SVN::Web;
-use Test::More;
+use Test::More qw(no_plan);
 use File::Path;
 use File::Spec;
 
@@ -13,7 +13,6 @@ plan skip_all => "Test::WWW::Mechanize not installed"
 plan skip_all => "can't find svnadmin"
     unless `svnadmin --version` =~ /version/;
 
-plan 'no_plan';
 $repospath = File::Spec->rel2abs("t/repos");
 
 rmtree ([$repospath]) if -d $repospath;
@@ -28,41 +27,40 @@ my $url = 'http://localhost/svnweb';
 use SVN::Web::Test ('http://localhost', '/svnweb',
 		    repos => $repospath);
 my $mech = SVN::Web::Test->new;
-$mech->get ('http://localhost/svnweb/repos/browse/A');
-
-$mech->content_is ('internal server error', 'no trailing slash for dir');
 
 $mech->get ('http://localhost/svnweb/repos/browse/');
-$mech->title_is ('SVN::Web');
+$mech->title_is ('browse: /repos/ (via SVN::Web)', "'browse' has correct title");
 
 $mech->get ('http://localhost/svnweb/repos/revision/?rev=2');
-$mech->title_is ('SVN::Web');
+$mech->title_is ('revision: /repos/ (Rev: 2, via SVN::Web)', "'revision' has correct title");
 
 $mech->get ('http://localhost/svnweb/');
-$mech->title_is ('SVN::Web');
+$mech->title_is ('Repository List (via SVN::Web)', "'list' has correct title");
 
 my %seen;
 
-check_links (0);
+check_links();
 
 
 sub check_links {
-    my $indent = shift;
-    is ($mech->status, 200);
-    $mech->content_unlike (qr'operation failed');
+    diag "---";
+    is ($mech->status, 200, 'Fetched: ' . $mech->uri());
+    $mech->content_unlike (qr'operation failed', '   and content was correct');
     my @links = $mech->links;
-    diag ((' ' x $indent)."==> ".$mech->uri.": ".(scalar @links)."\n")
-	if $ENV{TEST_VERBOSE};
+    diag 'Found ' . (scalar @links) . ' links' if $ENV{TEST_VERBOSE};
     for my $i (0..$#links) {
-	my $link_url = $links[$i]->url_abs;
-	next if $seen{$link_url};
-	++$seen{$link_url};
-	next if $link_url =~ m/diff/;
-	$mech->follow_link ( n => $i+1 );
-	check_links ($indent+1);
-	$mech->back;
+        my $link_url = $links[$i]->url_abs;
+        diag "Link $i/$#links: $link_url" if $ENV{TEST_VERBOSE};
+        next if $seen{$link_url};
+        ++$seen{$link_url};
+        next if $link_url =~ m/diff/;
+        next if $link_url !~ /localhost/;
+        diag "Following $link_url" if $ENV{TEST_VERBOSE};
+        $mech->follow_link ( n => $i+1 );
+        check_links();
+        diag "--- Back";
+        $mech->back;
     }
-    --$indent;
 }
 
 
