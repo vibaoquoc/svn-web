@@ -36,9 +36,13 @@
     <li>
       <div class="[% class_with_action.${path.value.action} %]"></div>
       [% IF path.value.isdir %]
-        <a href="[% script %]/[% repos %]/browse[% path.key %]/?rev=[% rev %]">[% path.key %]</a>
-        [% IF path.value.copyfrom %]([%|l%]copied from [%END%]
+        [% IF path.value.action == 'D' %]
+          [% path.key %]
+        [% ELSE %]
+          <a href="[% script %]/[% repos %]/browse[% path.key %]/?rev=[% rev %]">[% path.key %]</a>
+          [% IF path.value.copyfrom %]([%|l%]copied from [%END%]
           <a href="[% script %]/[% repos %]/browse[% path.value.copyfrom %]/?rev=[% path.value.copyfromrev %]">[% path.value.copyfrom %]:[% path.value.copyfromrev %]</a>)
+          [% END %]
         [% END %]
       [% ELSE %]
         [% IF path.value.action == 'D' %]
