@@ -1,5 +1,5 @@
 <html><head>
-<title>[% action %]: /[% repos %][% path %] ([% IF rev %]Rev: [% rev %], [% END %]via SVN::Web)</title>
+<title>[% IF action == 'list' %][%|l%]Repository List[%END%][% ELSE %][% action %]: /[% repos %][% path %] ([% IF rev %]Rev: [% rev %], [% END %]via SVN::Web)[% END %]</title>
 </head><body>
 <div id="body-container">
 <div id="banner">
