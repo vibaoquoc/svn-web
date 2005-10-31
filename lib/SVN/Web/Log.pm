@@ -47,6 +47,11 @@ youngest revision.
 
 A boolean value, true if the given path is a directory.
 
+=item rev
+
+The repository revision that the log starts with.
+
+
 =item revs
 
 A list of hashes.  Each entry corresponds to a particular repository revision,
@@ -183,6 +188,7 @@ sub run {
 	    data => { isdir => ($root->is_dir($self->{path})),
 		      revs => $self->{REVS},
 		      limit => $limit,
+		      rev => $rev,
 		      branchpoints => $self->{branch}->branchpoints ($self->{path}),
 		    }};
 }
