@@ -27,8 +27,9 @@ log_class                 SVN::Web::Log
 revision_class            SVN::Web::Revision
 rss_class                 SVN::Web::RSS
 template_class            SVN::Web::Template;
+view_class		  SVN::Web::View
 cgi_class		  CGI
-templatedir lib/SVN/Web/Template/}};
+templatedir lib/SVN/Web/Template/trac}};
 
     $config->{repos} = \%repos;
     SVN::Web::set_config ($config);
