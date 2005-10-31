@@ -139,6 +139,19 @@ sub _log {
 				     copyfromrev => $paths->{$_}->copyfrom_rev(),
 				     }} keys %$paths};
 
+    my $root = $self->{repos}->fs()->revision_root($rev);
+
+    foreach my $path (keys %{ $data->{paths} }) {
+      if(defined $data->{paths}{$path}{copyfrom}) {
+	my $kind = $root->check_path($data->{paths}{$path}{copyfrom});
+	if($kind == $SVN::Node::dir) {
+	  if($data->{paths}{$path}{copyfrom} !~ m|/$|) {
+	    $data->{paths}{$path}{copyfrom} .= '/';
+	  }
+	}
+      }
+    }
+
     push @{$self->{REVS}}, $data;
 }
 
