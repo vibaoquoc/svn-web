@@ -1,10 +1,10 @@
 <div class="title">(<a href="[% script %]/[% repos %]/rss[% path %]">[%|l%]RSS[%END%]</a>)</div>
 
-<div class="title"><form>
-  [%|l%]Show last[%END%] <input name="limit" size=4 value="[% limit %]">changes<input type="submit" name="submit" value="[%|l%]Show[%END%]"></form>
+<div class="title"><form action="get">
+  [%|l%]Show last[%END%] <input name="limit" size=4 value="[% limit %]" /> changes <input type="submit" name="submit" value="[%|l%]Show[%END%]" /></form>
 </div>
 
-<table id="chglist" class="listing">
+<table id="chglist" class="listing" summary="Change log">
   <thead>
     <tr>
       <th class="date">Date</th>
@@ -28,8 +28,8 @@
     <td class="author">[% author || '(no author)' %]</td>
     <td class="diff">[% UNLESS isdir || loop.count == loop.size %]
         [% prev = loop.count %]
-        <a href="[% script %]/[% repos %]/diff[% path %]?rev1=[% rev - 1 %]&rev2=[% rev %]">HTML</a> | <a href="[% script %]/[% repos %]/diff[% path %]?rev1=[% rev - 1 %]&rev2=[% rev %]&mime=text/plain">TEXT</a><br/>
-      [% END %]</th>
+        <a href="[% script %]/[% repos %]/diff[% path %]?rev1=[% rev - 1 %];rev2=[% rev %]">HTML</a> | <a href="[% script %]/[% repos %]/diff[% path %]?rev1=[% rev - 1 %];rev2=[% rev %];mime=text/plain">TEXT</a><br/>
+      [% END %]</td>
     <td class="summary"><p>[% msg | log_msg %]</p>
 
       [% FOREACH pk = paths %]
