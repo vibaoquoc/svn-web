@@ -1,4 +1,4 @@
-<p><a href="[% script %]/[% repos %]/log[% path %]">Revision Log</a></p>
+<p><a href="[% script %]/[% repos %]/log[% path %]?rev=[% rev %]">Revision Log</a></p>
 <div class="title">
 <a href="[% script %]/[% repos %]/revision?rev=[% rev %]">[%|l(rev)%]revision %1[%END%]</a> - [% author || '(no author)' %] - [% date %]:<br />
 </div>
