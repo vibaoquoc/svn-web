@@ -1,7 +1,8 @@
 [% USE Number.Format %]
+[% USE cgi = CGI %]
 
 <div id="jumprev">
-  <form action="" method="get">
+  <form action="[% cgi.self_url %]" method="get">
    <div>
     <label for="rev">View revision:</label>
     <input type="text" id="rev" name="rev" value="[% rev %]" size="4" />
