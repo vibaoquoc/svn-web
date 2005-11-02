@@ -79,7 +79,7 @@ The log message for the entry's most recent interesting revision.
 
 =back
 
-=item revision
+=item rev
 
 The repository revision that is being browsed.  Will be the same as the
 C<rev> parameter given to the action, unless that parameter was not set,
@@ -111,6 +111,7 @@ sub run {
     my $self = shift;
     my $fs = $self->{repos}->fs;
     my $rev = $self->{cgi}->param('rev') || $fs->youngest_rev;
+
     if ($self->{path} !~ m|/$|) {
         print $self->{cgi}->redirect(-uri => $self->{cgi}->self_url() . '/');
     }
@@ -118,7 +119,7 @@ sub run {
     $path =~ s|/$|| unless $path eq '/';
     my $root = $fs->revision_root ($rev);
     my $kind = $root->check_path ($path);
-    die "path does not exist" if $kind == $SVN::Node::none;
+    die "path '$path' does not exist in revision $rev" if $kind == $SVN::Node::none;
 
     die "not a directory in browse" unless $kind == $SVN::Node::dir;
 
@@ -154,7 +155,7 @@ sub run {
     @$entries = sort {($b->{isdir} <=> $a->{isdir}) || ($a->{name} cmp $b->{name})} @$entries;
 
     return { template => 'browse',
-	     data => { entries => $entries, revision => $rev,
+	     data => { entries => $entries, rev => $rev,
 		       branchto => $self->{branch}->branchto ($self->{path}, $rev),
 		       branchfrom => $self->{branch}->branchfrom ($self->{path}, $rev),
 		     }};
