@@ -39,7 +39,7 @@ use SVN::Web::Test ('http://localhost', '/svnweb',
 my $mech = SVN::Web::Test->new;
 
 $mech->get ('http://localhost/svnweb/repos/browse/');
-$mech->title_is ('browse: /repos/ (via SVN::Web)', "'browse' has correct title");
+$mech->title_is ('browse: /repos/ (Rev: 2, via SVN::Web)', "'browse' has correct title");
 
 $mech->get ('http://localhost/svnweb/repos/revision/?rev=2');
 $mech->title_is ('revision: /repos/ (Rev: 2, via SVN::Web)', "'revision' has correct title");
@@ -48,6 +48,8 @@ $mech->get ('http://localhost/svnweb/');
 $mech->title_is ('Repository List (via SVN::Web)', "'list' has correct title");
 
 my %seen;
+
+diag "Recusrively checking all links";
 
 check_links();
 
@@ -60,6 +62,7 @@ sub check_links {
 	or diag($mech->content());
     }
 
+#    diag $mech->content() if $mech->uri() !~ m{ /(?:rss|checkout)/ }x;
     my @links = $mech->links;
     diag 'Found ' . (scalar @links) . ' links' if $ENV{TEST_VERBOSE};
     for my $i (0..$#links) {
@@ -70,7 +73,8 @@ sub check_links {
         next if $link_url =~ m/diff/;
         next if $link_url !~ /localhost/;
         diag "Following $link_url" if $ENV{TEST_VERBOSE};
-        $mech->follow_link ( n => $i+1 );
+#        $mech->follow_link ( n => $i+1 );
+	$mech->get($link_url);
         check_links();
         diag "--- Back" if $ENV{TEST_VERBOSE};
         $mech->back;
