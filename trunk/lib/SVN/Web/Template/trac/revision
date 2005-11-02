@@ -79,14 +79,22 @@
     </dl>
   </div>
 
-  <ul>
-  [% FOREACH path = paths %]
-    [% NEXT IF path.value.isdir %]
-    [% NEXT UNLESS path.value.diff %]
-    <li id="diff_[% path.key.replace('/', '_') | uri | html %]">
-      <h2>[% path.key %]</h2>
-        [% path.value.diff %]
-    </li>
+  [% FOREACH path = paths;
+       NEXT IF path.value.isdir;
+       NEXT UNLESS path.value.diff;
+       include_diff = 1;
+     END %]
+
+  [% IF include_diff %]
+    <ul>
+    [% FOREACH path = paths %]
+      [% NEXT IF path.value.isdir %]
+      [% NEXT UNLESS path.value.diff %]
+      <li id="diff_[% path.key.replace('/', '_') | uri | html %]">
+        <h2>[% path.key %]</h2>
+          [% path.value.diff %]
+      </li>
+    [% END %]
+    </ul>
   [% END %]
-  </ul>
 </div>
