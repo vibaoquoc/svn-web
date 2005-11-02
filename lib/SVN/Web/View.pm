@@ -93,10 +93,15 @@ sub _log {
 
     my $data = { rev => $rev, author => $author,
 		 date => $date, msg => $msg };
-    $data->{paths} = { map { $_ => { action => $paths->{$_}->action(),
-				     copyfrom => $paths->{$_}->copyfrom_path(),
-				     copyfromrev => $paths->{$_}->copyfrom_rev(),
-				     }} keys %$paths};
+
+    my $root = $self->{repos}->fs()->revision_root($rev);
+
+    $data->{paths} = 
+      { map { $_ => { action => $paths->{$_}->action(),
+		      copyfrom => $paths->{$_}->copyfrom_path(),
+		      copyfromrev => $paths->{$_}->copyfrom_rev(),
+		      isdir => $root->check_path($_) == $SVN::Node::dir,
+		    }} keys %$paths};
 
     return $data;
 }
