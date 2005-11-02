@@ -12,6 +12,14 @@ use strict;
 use Storable qw(freeze thaw);
 use base qw(Test::WWW::Mechanize);
 
+# CGI.pm does not reinitialise itself from the environment when multiple
+# objects are created.  This is a problem when testing, as the tests pass
+# in different QUERY_STRING variables.  C<< use CGI >> and increment
+# $CGI::PERLEX, which is an internal CGI.pm flag that turns off this
+# behaviour.
+use CGI;
+$CGI::PERLEX++;
+
 my ($host, $script) = @_;
 
 sub import {
