@@ -11,7 +11,10 @@
 
 <div class="title"><a href="[% script %]/[% repos %]/log[% path %]">[%|l%]Revision Log[%END%]</a></div>
 
-<table class="listing" id="dirlist">
+[% IF entries.size == 0 %]
+<p>No entries in this directory.</p>
+[% ELSE %]
+<table class="listing" id="dirlist" summary="File and directory listing">
   <thead>
     <tr>
       <th class="name">[%|l%]Name[%END%]</th>
@@ -39,3 +42,4 @@
   [% END %]
   </tbody>
 </table>
+[% END %]
