@@ -17,8 +17,6 @@ plan skip_all => "can't find svnadmin"
 
 $can_tidy = eval { require Test::HTML::Tidy; 1 };
 
-diag "can tidy?: $can_tidy";
-
 plan 'no_plan';
 $repospath = File::Spec->rel2abs("t/repos");
 
@@ -51,9 +49,7 @@ $mech->title_is ('Repository List (via SVN::Web)', "'list' has correct title");
 
 my %seen;
 
-diag "can tidy? $can_tidy";
 check_links();
-
 
 sub check_links {
     diag "---" if $ENV{TEST_VERBOSE};
