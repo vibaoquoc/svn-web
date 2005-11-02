@@ -21,7 +21,7 @@
                   <span class="sep">/</span>   [% p %]
                 [% END %]
               [% ELSE %]
-                <span class="sep">/</span>    <a href="[% url %]browse[% urlpath.join('/') %]">[% p %]</a>
+                <span class="sep">/</span>    <a href="[% url %]browse[% urlpath.join('/') %][% IF rev %]?rev=[% rev %][% END %]">[% p %]</a>
               [% END %]
           [% END %]</h1>
       </div>
