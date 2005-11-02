@@ -50,11 +50,11 @@
         [% ELSE %]
           <a href="[% script %]/[% repos %]/view[% path.key %]?rev=[% rev %]">[% path.key %]</a>
           [% IF path.value.action == 'M' %]
-            (<a href="#[% path.key %]">[%|l%]diff[%END%]</a>)
+            (<a href="#diff_[% path.key.replace('/', '_') | uri | html %]">[%|l%]diff[%END%]</a>)
           [% END %]
           [% IF path.value.action == 'A' %]
             [% IF path.value.diff %]
-              (<a href="#[% path.key %]">[%|l%]diff[%END%]</a>)
+              (<a href="#diff_[% path.key.replace('/', '_') | uri | html %]">[%|l%]diff[%END%]</a>)
             [% END %]
           [% END %]
           (<a href="[% script %]/[% repos %]/checkout[% path.key %]?rev=[% rev %]">[%|l%]checkout[%END%]</a>)
@@ -73,9 +73,9 @@
   <div id="legend">
     <h3>Legend:</h3>
     <dl>
-      <dt class="add"></dt><dd>Added</dd>
-      <dt class="rem"></dt><dd>Removed</dd>
-      <dt class="mod"></dt><dd>Modified</dd>
+      <dt class="add">&nbsp;</dt><dd>Added</dd>
+      <dt class="rem">&nbsp;</dt><dd>Removed</dd>
+      <dt class="mod">&nbsp;</dt><dd>Modified</dd>
     </dl>
   </div>
 
@@ -83,7 +83,7 @@
   [% FOREACH path = paths %]
     [% NEXT IF path.value.isdir %]
     [% NEXT UNLESS path.value.diff %]
-    <li id="[% path.key %]">
+    <li id="diff_[% path.key.replace('/', '_') | uri | html %]">
       <h2>[% path.key %]</h2>
         [% path.value.diff %]
     </li>
