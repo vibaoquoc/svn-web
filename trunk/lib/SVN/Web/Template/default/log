@@ -1,3 +1,5 @@
+[% USE cgi = CGI %]
+
 <div class="title">
 [%|l(path)%]history for path %1[%END%] <a href="[% script %]/[% repos %]/rss[% path %]">[%|l%](track)[%END%]</a>
 [% IF isdir %]
@@ -5,7 +7,7 @@
 [% END %]
 </div>
 <div class="title">
-<form action="get">[%|l%]Show last[%END%] <input name="limit" size=4 value="[% limit %]" /> changes <input type="submit" name="submit" value="[%|l%]Show[%END%]" /></form>
+<form action="[% cgi.self_url %]" method="get">[%|l%]Show last[%END%] <input name="limit" size=4 value="[% limit %]" /> changes <input type="submit" name="submit" value="[%|l%]Show[%END%]" /></form>
 </div>
 [% FOREACH revs %]
 <hr />
