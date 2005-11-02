@@ -6,7 +6,11 @@ use XML::RSS;
 
 sub run {
     my $self = shift;
-    my $data = $self->SUPER::run(@_)->{data};
+    my $data = eval { $self->SUPER::run(@_)->{data}; };
+
+    if(! defined $data) {
+      return "<p>RSS error -- this file does not exist in the repository.</p>";
+    }
 
     my $rss = new XML::RSS (version => '1.0');
     my $url = "http://$ENV{HTTP_HOST}$self->{script}/$self->{reposname}";
