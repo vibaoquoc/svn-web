@@ -330,7 +330,7 @@ Shows information about a specific repository revision.
 
 =item I<rss>, I<SVN::Web::RSS>
 
-TODO
+Generates an RSS feed of changes to the repository path.
 
 =item I<view>, I<SVN::Web::View>
 
