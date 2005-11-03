@@ -126,11 +126,15 @@ sub run {
     $hist = $hist->prev(0);
     $rev = ($hist->location())[1];
 
-    # Find the youngest revision of this file
-    $root = $fs->revision_root($fs->youngest_rev());
-    $hist = $root->node_history($self->{path});
-    $hist = $hist->prev(0);
-    my $youngest_rev = ($hist->location())[1];
+    # If no rev param was passed in, then $rev is also the file's youngest
+    # rev.  Which means we're at the file's head.  Otherwise, use the fs'
+    # youngest rev as the youngest rev
+    my $youngest_rev;
+    if(! defined $self->{cgi}->param('rev')) {
+      $youngest_rev = $rev;
+    } else {
+      $youngest_rev = $fs->youngest_rev();
+    }
 
     # Get the log for this revision of the file
     $self->{repos}->get_logs([$self->{path}], $rev - 1, $rev, 1, 0,
