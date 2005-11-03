@@ -95,13 +95,16 @@ SVN::Web's output is entirely template driven.  SVN::Web ships with a
 number of different template styles, installed in to the F<templates/>
 subdirectory of wherever you ran C<svnweb-install>.
 
-The default templates are installed in F<templates/default>.  To change
-to another set, use the C<templatedir> configuration directive.
+The default templates are installed in F<templates/trac>.  These implement
+a look and feel similar to the Trac (L<http://www.edgewall.com/trac/>)
+output.
 
-For example, to use a set of templates that implement a look and feel similar
-to the Trac (L<http://www.edgewall.com/trac/>) output;
+To change to another set, use the C<templatedir> configuration directive.
 
-  templatedir: 'template/trac'
+For example, to use a set of templates that implement a much plainer look
+and feel:
+
+  templatedir: 'template/plain'
 
 Alternatively, if you have your own templates elsewhere you can
 specify a full path to the templates.
@@ -519,7 +522,7 @@ sub mod_perl_output {
 our $pool; # global pool for holding opened repos
 
 sub get_template {
-    Template->new ({ INCLUDE_PATH => ($config->{templatedir} || 'template/default/'),
+    Template->new ({ INCLUDE_PATH => ($config->{templatedir} || 'template/trac/'),
 		     PRE_PROCESS => 'header',
 		     POST_PROCESS => 'footer',
 		     FILTERS => { l => ([\&loc_filter, 1]),
