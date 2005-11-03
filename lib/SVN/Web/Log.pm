@@ -63,6 +63,10 @@ and has the following keys.
 
 The repository revision this entry is for.
 
+=item youngest_rev
+
+The repository's youngest revision.
+
 =item author
 
 The author of this change.
@@ -212,6 +216,7 @@ sub run {
 		      revs => $self->{REVS},
 		      limit => $limit,
 		      rev => $rev,
+		      youngest_rev => $fs->youngest_rev(),
 		      branchpoints => $self->{branch}->branchpoints ($self->{path}),
 		    }};
 }

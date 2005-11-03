@@ -1,6 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+[% IF rev == youngest_rev %]
+[% revstr = '' %]
+[% ELSE %]
+[% revstr = "?rev=$rev" %]
+[% END %]
+
 <html>
   <head>
     <title>[% IF action == 'list' %][%|l%]Repository List[%END%][% ELSE %][% action %]: /[% repos %][% path %][% END %] ([% IF rev %]Rev: [% rev %], [% END %]via SVN::Web)</title>
@@ -21,9 +27,9 @@
                   <span class="sep">/</span>   [% p %]
                 [% END %]
               [% ELSE %]
-                <span class="sep">/</span>    <a href="[% url %]browse[% urlpath.join('/') %][% IF rev %]?rev=[% rev %][% END %]">[% p %]</a>
+                <span class="sep">/</span>    <a href="[% url %]browse[% urlpath.join('/') %][% revstr %]">[% p %]</a>
               [% END %]
-          [% END %]</h1>
+          [% END %] @ [% rev == youngest_rev ? 'HEAD' : "r$rev" %]</h1>
       </div>
     [% END %]
     <div id="content">
