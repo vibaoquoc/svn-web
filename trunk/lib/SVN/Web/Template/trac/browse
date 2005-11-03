@@ -20,7 +20,6 @@
     <tr>
       <th class="name">[%|l%]Name[%END%]</th>
       <th class="rev">[%|l%]Rev[%END%]</th>
-      <th class="age">[%|l%]Age[%END%]</th>
       <th class="size">[%|l%]Size[%END%]</th>
       <th class="change">[%|l%]Last Change[%END%]</th>
     </tr>
@@ -36,7 +35,6 @@
       [% END %]
       </td>
       <td class="rev"><a href="[% script %]/[% repos %]/revision?rev=[% rev %]">[% rev %]</a></td>
-      <td class="age">Unimpl</td>
       <td class="size">[% IF ! isdir; size | format_bytes; END %]</td>
       <td class="change"><span class="author">[% author %]:</span> <span class="change">[% msg | truncate(100) | html %]</span></td>
     </tr>
