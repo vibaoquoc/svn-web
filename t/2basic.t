@@ -39,10 +39,13 @@ use SVN::Web::Test ('http://localhost', '/svnweb',
 my $mech = SVN::Web::Test->new;
 
 $mech->get ('http://localhost/svnweb/repos/browse/');
-$mech->title_is ('browse: /repos/ (Rev: 2, via SVN::Web)', "'browse' has correct title");
+$mech->title_is ('browse: /repos/ (Rev: HEAD, via SVN::Web)', "'browse' has correct title");
+
+$mech->get ('http://localhost/svnweb/repos/browse/?rev=1');
+$mech->title_is ('browse: /repos/ (Rev: 1, via SVN::Web)', "'browse' with rev has correct title");
 
 $mech->get ('http://localhost/svnweb/repos/revision/?rev=2');
-$mech->title_is ('revision: /repos/ (Rev: 2, via SVN::Web)', "'revision' has correct title");
+$mech->title_is ('revision: /repos/ (Rev: HEAD, via SVN::Web)', "'revision' has correct title");
 
 $mech->get ('http://localhost/svnweb/');
 $mech->title_is ('Repository List (via SVN::Web)', "'list' has correct title");
