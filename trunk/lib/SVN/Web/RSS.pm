@@ -4,6 +4,40 @@ use strict;
 use SVN::Web::Log;
 use XML::RSS;
 
+=head1 NAME
+
+SVN::Web::RSS - SVN::Web action to generate an RSS feed
+
+=head1 SYNOPSIS
+
+In F<config.yaml>
+
+  actions:
+    ...
+    - rss
+    ...
+
+  rss_class: SVN::Web::RSS
+
+=head1 DESCRIPTION
+
+Generates an RSS feed of commits to a file or path in the Subversion 
+repository.
+
+=head1 OPTIONS
+
+None.
+
+=head1 TEMPLATE VARIABLES
+
+None.  This action does not use a template.
+
+=head1 EXCEPTIONS
+
+None.
+
+=cut
+
 sub run {
     my $self = shift;
     my $data = eval { $self->SUPER::run(@_)->{data}; };
