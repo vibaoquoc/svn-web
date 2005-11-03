@@ -13,7 +13,7 @@
       <th class="rev">Rev</th>
       <th class="chgset">Chgset</th>
       <th class="author">Author</th>
-      <th class="diff">Diff</th>
+      [% IF ! isdir %]<th class="diff">Diff</th>[% END %]
       <th class="summary">Log message</th>
     </tr>
   </thead>
@@ -28,10 +28,10 @@
       [% END %]</td>
     <td class="chgset"><a href="[% script %]/[% repos %]/revision/?rev=[% rev %]">[% rev %]</a></td>
     <td class="author">[% author || '(no author)' %]</td>
-    <td class="diff">[% UNLESS isdir || loop.count == loop.size %]
+    [% IF ! isdir %]<td class="diff">[% UNLESS loop.count == loop.size %]
         [% prev = loop.count %]
         <a href="[% script %]/[% repos %]/diff[% path %]?rev1=[% rev - 1 %];rev2=[% rev %]">HTML</a> | <a href="[% script %]/[% repos %]/diff[% path %]?rev1=[% rev - 1 %];rev2=[% rev %];mime=text/plain">TEXT</a><br/>
-      [% END %]</td>
+      [% END %]</td>[% END %]
     <td class="summary">[% msg | log_msg %]
 
       [% FOREACH pk = paths %]
