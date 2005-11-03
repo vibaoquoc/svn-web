@@ -9,7 +9,7 @@
 
 <html>
   <head>
-    <title>[% IF action == 'list' %][%|l%]Repository List[%END%][% ELSE %][% action %]: /[% repos %][% path %][% END %] ([% IF rev %]Rev: [% rev %], [% END %]via SVN::Web)</title>
+    <title>[% IF action == 'list' %][%|l%]Repository List[%END%][% ELSE %][% action %]: /[% repos %][% path %][% END %] ([% IF rev %]Rev: [% rev == youngest_rev ? 'HEAD' : rev %], [% END %]via SVN::Web)</title>
     [% IF style %]
       <link rel="stylesheet" href="[% style %]" type="text/css" />
     [% ELSE %]
