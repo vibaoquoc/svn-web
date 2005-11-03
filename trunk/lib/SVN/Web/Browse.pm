@@ -85,6 +85,10 @@ The repository revision that is being browsed.  Will be the same as the
 C<rev> parameter given to the action, unless that parameter was not set,
 in which case it will be the repository's youngest revision.
 
+=item youngest_rev
+
+The repository's youngest revision.
+
 =back
 
 =head1 EXCEPTIONS
@@ -155,7 +159,9 @@ sub run {
     @$entries = sort {($b->{isdir} <=> $a->{isdir}) || ($a->{name} cmp $b->{name})} @$entries;
 
     return { template => 'browse',
-	     data => { entries => $entries, rev => $rev,
+	     data => { entries => $entries,
+		       rev => $rev,
+		       youngest_rev => $fs->youngest_rev(),
 		       branchto => $self->{branch}->branchto ($self->{path}, $rev),
 		       branchfrom => $self->{branch}->branchfrom ($self->{path}, $rev),
 		     }};

@@ -46,7 +46,14 @@ less than C<rev>.
 =item rev
 
 The revision that has been returned.  This is not necessarily the same
-as the C<rev> option passed to the action.
+as the C<rev> option passed to the action.  If the C<rev> passed to the
+action is not interesting (i.e., there were no changes to the file at that
+revision) then the file's history is searched backwards to find the next
+oldest interesting revision.
+
+=item youngest_rev
+
+The youngest interesting revision of the file.
 
 =item mimetype
 
@@ -119,6 +126,12 @@ sub run {
     $hist = $hist->prev(0);
     $rev = ($hist->location())[1];
 
+    # Find the youngest revision of this file
+    $root = $fs->revision_root($fs->youngest_rev());
+    $hist = $root->node_history($self->{path});
+    $hist = $hist->prev(0);
+    my $youngest_rev = ($hist->location())[1];
+
     # Get the log for this revision of the file
     $self->{repos}->get_logs([$self->{path}], $rev - 1, $rev, 1, 0,
                              sub { $self->{REV} = $self->_log(@_)});
@@ -129,6 +142,7 @@ sub run {
     local $/;
     return {template => 'view',
 	    data => { rev => $rev,
+		      youngest_rev => $youngest_rev,
 		      mimetype => $root->node_prop($self->{path},
 						   'svn:mime-type') || 'text/plain',
 		      file => <$file>,
