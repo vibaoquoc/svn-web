@@ -182,8 +182,8 @@ list of hash key,value pairs.
 
   ...
   opts:
-    - first_opt: first_value
-      second_opt: second_value
+    first_opt: first_value
+    second_opt: second_value
   ...
 
 =back
@@ -590,7 +590,7 @@ sub log_msg_filter {
     }
 
     if(defined $plugin and $plugin->can('filter')) {
-      $text = $plugin->filter($text);
+      $text = $plugin->filter($text, [], $filter_spec->{opts});
     } else {
       my $filter = $context->filter($filter_spec->{filter},
 				    $filter_spec->{opts}) || next;
