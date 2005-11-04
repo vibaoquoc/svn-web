@@ -4,32 +4,32 @@
                          } %]
 
 <div id="ctxtnav" class="nav">
-  <h2>[%|l%]Revision Navigation[%END%]</h2>
+  <h2>[%|l%](revision navigation)[%END%]</h2>
 
   <ul>
     [% IF rev > 1 %]
-      <li class="first[% rev == youngest_rev ? ' last': '' %]"><a href="[% script %]/[% repos %]/revision?rev=[% rev - 1 %]">[%|l%]Previous Revision[%END%]</a></li>
+      <li class="first[% rev == youngest_rev ? ' last': '' %]"><a href="[% script %]/[% repos %]/revision?rev=[% rev - 1 %]">[%|l%](previous revision)[%END%]</a></li>
     [% END %]
     [% IF rev != youngest_rev %]
-      <li class="first"><a href="[% script %]/[% repos %]/revision?rev=[% rev + 1 %]">[%|l%]Next Revision[%END%]</a></li>
-      <li class="first last"><a href="[% script %]/[% repos %]/revision?rev=[% youngest_rev %]">[%|l%]Most Recent[%END%]</a></li>
+      <li class="first"><a href="[% script %]/[% repos %]/revision?rev=[% rev + 1 %]">[%|l%](next revision)[%END%]</a></li>
+      <li class="first last"><a href="[% script %]/[% repos %]/revision?rev=[% youngest_rev %]">[%|l%](youngest revision)[%END%]</a></li>
     [% END %]
   </ul>
 </div>
 
-<h1>[%|l%]Revision[%END%] [% rev %]</h1>
+<h1>[%|l%](revision)[%END%] [% rev %]</h1>
 
 <dl id="overview">
-  <dt class="time">[%|l%]Timestamp[%END%]:</dt>
+  <dt class="time">[%|l%](date)[%END%]:</dt>
   <dd class="time">[% date.replace('T', ' ').replace('\..+', '').replace('-', '/') %]</dd>
 
-  <dt class="author">[%|l%]Author[%END%]:</dt>
+  <dt class="author">[%|l%](author)[%END%]:</dt>
   <dd class="author">[% author || '(no author)' %]</dd>
 
-  <dt class="message">[%|l%]Message[%END%]:</dt>
+  <dt class="message">[%|l%](revision log)[%END%]:</dt>
   <dd class="message"><p>[% msg | log_msg %]</p></dd>
 
-  <dt class="files">[%|l%]Files[%END%]:</dt>
+  <dt class="files">[%|l%](files)[%END%]:</dt>
   <dd class="files">
     <ul>
     [% FOREACH path = paths %]
@@ -40,7 +40,7 @@
           [% path.key %]
         [% ELSE %]
           <a href="[% script %]/[% repos %]/browse[% path.key %]/?rev=[% rev %]">[% path.key %]</a>
-          [% IF path.value.copyfrom %]([%|l%]copied from [%END%]
+          [% IF path.value.copyfrom %]([%|l%](copied from)[%END%]
           <a href="[% script %]/[% repos %]/browse[% path.value.copyfrom %]/?rev=[% path.value.copyfromrev %]">[% path.value.copyfrom %]:[% path.value.copyfromrev %]</a>)
           [% END %]
         [% END %]
@@ -50,16 +50,16 @@
         [% ELSE %]
           <a href="[% script %]/[% repos %]/view[% path.key %]?rev=[% rev %]">[% path.key %]</a>
           [% IF path.value.action == 'M' %]
-            (<a href="#diff_[% path.key.replace('/', '_') | uri | html %]">[%|l%]diff[%END%]</a>)
+            (<a href="#diff_[% path.key.replace('/', '_') | uri | html %]">[%|l%](diff)[%END%]</a>)
           [% END %]
           [% IF path.value.action == 'A' %]
             [% IF path.value.diff %]
-              (<a href="#diff_[% path.key.replace('/', '_') | uri | html %]">[%|l%]diff[%END%]</a>)
+              (<a href="#diff_[% path.key.replace('/', '_') | uri | html %]">[%|l%](diff)[%END%]</a>)
             [% END %]
           [% END %]
-          (<a href="[% script %]/[% repos %]/checkout[% path.key %]?rev=[% rev %]">[%|l%]checkout[%END%]</a>)
+          (<a href="[% script %]/[% repos %]/checkout[% path.key %]?rev=[% rev %]">[%|l%](checkout)[%END%]</a>)
         [% END %]
-        [% IF path.value.copyfrom %]([%|l%]copied from [%END%]
+        [% IF path.value.copyfrom %]([%|l%](copied from)[%END%]
           <a href="[% script %]/[% repos %]/view[% path.value.copyfrom %]?rev=[% path.value.copyfromrev %]">[% path.value.copyfrom %]:[% path.value.copyfromrev %]</a>)
         [% END %]
       [% END %]
@@ -71,11 +71,11 @@
 
 <div class="diff">
   <div id="legend">
-    <h3>[%|l%]Legend[%END%]:</h3>
+    <h3>[%|l%](legend)[%END%]:</h3>
     <dl>
-      <dt class="add">&nbsp;</dt><dd>[%|l%]Added[%END%]</dd>
-      <dt class="rem">&nbsp;</dt><dd>[%|l%]Removed[%END%]</dd>
-      <dt class="mod">&nbsp;</dt><dd>[%|l%]Modified[%END%]</dd>
+      <dt class="add">&nbsp;</dt><dd>[%|l%](added)[%END%]</dd>
+      <dt class="rem">&nbsp;</dt><dd>[%|l%](removed)[%END%]</dd>
+      <dt class="mod">&nbsp;</dt><dd>[%|l%](modified)[%END%]</dd>
     </dl>
   </div>
 

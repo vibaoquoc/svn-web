@@ -1,6 +1,6 @@
 [% IF reposcount %]
 <p>
-[%|l%]Please select a repository to browse:[%END%]
+[%|l%](choose repos)[%END%]:
 </p>
 
 <ul>
@@ -10,6 +10,6 @@
 </ul>
 [% ELSE %]
 <p>
-[%|l%]No repositories are available for browsing.[%END%]
+[%|l%](no repos)[%END%]
 </p>
 [% END %]

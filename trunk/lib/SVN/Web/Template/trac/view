@@ -1,9 +1,9 @@
-<p><a href="[% script %]/[% repos %]/log[% path %][% revstr %]">[%|l%]Revision Log[%END%]</a> | <a href="[% script %]/[% repos %]/checkout[% path %][% revstr %]">[%|l%]Checkout[%END%]</a></p>
+<p><a href="[% script %]/[% repos %]/log[% path %][% revstr %]">[%|l%](revision log)[%END%]</a> | <a href="[% script %]/[% repos %]/checkout[% path %][% revstr %]">[%|l%](checkout)[%END%]</a></p>
 
-<table id="info" summary="[%|l%]Log message[%END%]">
+<table id="info" summary="[%|l%](revision log)[%END%]">
   <tr>
     <th scope="row">
-[%|l%]Revision[%END%] <a href="[% script %]/[% repos %]/revision?rev=[% rev %]">[% rev %]</a> (by [% author || '(no author)' %], [% date.replace('T', ' ').replace('\..+', '').replace('-', '/') %])</th>
+[%|l%](revision)[%END%] <a href="[% script %]/[% repos %]/revision?rev=[% rev %]">[% rev %]</a> (by [% author || '(no author)' %], [% date.replace('T', ' ').replace('\..+', '').replace('-', '/') %])</th>
     <td class="message">[% msg | log_msg %]</td>
   </tr>
 </table>
