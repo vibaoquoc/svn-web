@@ -52,3 +52,4 @@ t/1use.t
 t/2basic.t
 t/test_repo.dump
 TODO
+UPDATING.pod
