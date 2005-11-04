@@ -4,7 +4,7 @@
 <div id="jumprev">
   <form action="[% cgi.self_url %]" method="get">
    <div>
-    <label for="rev">View revision:</label>
+    <label for="rev">[%|l%]View revision[%END%]:</label>
     <input type="text" id="rev" name="rev" value="[% rev %]" size="4" />
    </div>
   </form>
@@ -13,9 +13,9 @@
 <div class="title"><a href="[% script %]/[% repos %]/log[% path %][% revstr %]">[%|l%]Revision Log[%END%]</a></div>
 
 [% IF entries.size == 0 %]
-<p>No entries in this directory.</p>
+<p>[%|l%]No entries in this directory.[%END%]</p>
 [% ELSE %]
-<table class="listing" id="dirlist" summary="File and directory listing">
+<table class="listing" id="dirlist" summary="[%|l%]File and directory listing[%END%]">
   <thead>
     <tr>
       <th class="name">[%|l%]Name[%END%]</th>

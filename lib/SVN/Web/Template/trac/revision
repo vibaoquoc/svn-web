@@ -4,15 +4,15 @@
                          } %]
 
 <div id="ctxtnav" class="nav">
-  <h2>Revision Navigation</h2>
+  <h2>[%|l%]Revision Navigation[%END%]</h2>
 
   <ul>
     [% IF rev > 1 %]
-      <li class="first[% rev == youngest_rev ? ' last': '' %]"><a href="[% script %]/[% repos %]/revision?rev=[% rev - 1 %]">Previous Revision</a></li>
+      <li class="first[% rev == youngest_rev ? ' last': '' %]"><a href="[% script %]/[% repos %]/revision?rev=[% rev - 1 %]">[%|l%]Previous Revision[%END%]</a></li>
     [% END %]
     [% IF rev != youngest_rev %]
-      <li class="first"><a href="[% script %]/[% repos %]/revision?rev=[% rev + 1 %]">Next Revision</a></li>
-      <li class="first last"><a href="[% script %]/[% repos %]/revision?rev=[% youngest_rev %]">Most Recent</a></li>
+      <li class="first"><a href="[% script %]/[% repos %]/revision?rev=[% rev + 1 %]">[%|l%]Next Revision[%END%]</a></li>
+      <li class="first last"><a href="[% script %]/[% repos %]/revision?rev=[% youngest_rev %]">[%|l%]Most Recent[%END%]</a></li>
     [% END %]
   </ul>
 </div>
@@ -20,16 +20,16 @@
 <h1>[%|l%]Revision[%END%] [% rev %]</h1>
 
 <dl id="overview">
-  <dt class="time">Timestamp:</dt>
+  <dt class="time">[%|l%]Timestamp[%END%]:</dt>
   <dd class="time">[% date.replace('T', ' ').replace('\..+', '').replace('-', '/') %]</dd>
 
-  <dt class="author">Author:</dt>
+  <dt class="author">[%|l%]Author[%END%]:</dt>
   <dd class="author">[% author || '(no author)' %]</dd>
 
-  <dt class="message">Message:</dt>
+  <dt class="message">[%|l%]Message[%END%]:</dt>
   <dd class="message"><p>[% msg | log_msg %]</p></dd>
 
-  <dt class="files">Files:</dt>
+  <dt class="files">[%|l%]Files[%END%]:</dt>
   <dd class="files">
     <ul>
     [% FOREACH path = paths %]
@@ -71,11 +71,11 @@
 
 <div class="diff">
   <div id="legend">
-    <h3>Legend:</h3>
+    <h3>[%|l%]Legend[%END%]:</h3>
     <dl>
-      <dt class="add">&nbsp;</dt><dd>Added</dd>
-      <dt class="rem">&nbsp;</dt><dd>Removed</dd>
-      <dt class="mod">&nbsp;</dt><dd>Modified</dd>
+      <dt class="add">&nbsp;</dt><dd>[%|l%]Added[%END%]</dd>
+      <dt class="rem">&nbsp;</dt><dd>[%|l%]Removed[%END%]</dd>
+      <dt class="mod">&nbsp;</dt><dd>[%|l%]Modified[%END%]</dd>
     </dl>
   </div>
 
