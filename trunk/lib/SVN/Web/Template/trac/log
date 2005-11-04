@@ -6,15 +6,15 @@
   [%|l%]Show last[%END%] <input name="limit" size=4 value="[% limit %]" /> changes <input type="submit" name="submit" value="[%|l%]Show[%END%]" /></form>
 </div>
 
-<table id="chglist" class="listing" summary="Change log">
+<table id="chglist" class="listing" summary="[%|l%]Change log[%END%]">
   <thead>
     <tr>
-      <th class="date">Date</th>
-      <th class="rev">Rev</th>
-      <th class="chgset">Chgset</th>
-      <th class="author">Author</th>
-      [% IF ! isdir %]<th class="diff">Diff</th>[% END %]
-      <th class="summary">Log message</th>
+      <th class="date">[%|l%]Date[%END%]</th>
+      <th class="rev">[%|l%]Rev[%END%]</th>
+      <th class="chgset">[%|l%]Chgset[%END%]</th>
+      <th class="author">[%|l%]Author[%END%]</th>
+      [% IF ! isdir %]<th class="diff">[%|l%]Diff[%END%]</th>[% END %]
+      <th class="summary">[%|l%]Log message[%END%]</th>
     </tr>
   </thead>
   <tbody>
