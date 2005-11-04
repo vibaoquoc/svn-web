@@ -38,7 +38,8 @@ while (my ($from, $to) = each %targets) {
 }
 
 print $fh <<END;
-# Suggested minimum filters to run log messages through.
+# Suggested minimum filters to run log messages through.  Note that
+# it is not fatal if one of these filters is not installed.
 log_msg_filters:
   - name: standard
     filter: html
@@ -66,7 +67,6 @@ log_msg_filters:
 #  - 'blocked1'
 #  - 'blocked2'
 #
-# style: '/svnweb/css/styles-hlb.css'
 
 END
 
