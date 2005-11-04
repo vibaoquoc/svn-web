@@ -358,8 +358,6 @@ apache configuration:
       PerlHandler SVN::Web
     </Directory>
 
-=head1 BUGS
-
 =cut
 
 my $template;
@@ -645,6 +643,10 @@ sub handler {
 
    return &Apache::OK;
 }
+
+=head1 SEE ALSO
+
+L<SVN::Web::action>
 
 =head1 AUTHORS
 
