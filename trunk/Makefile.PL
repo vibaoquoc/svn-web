@@ -19,6 +19,12 @@ requires(
 	'Template::Plugin::Number::Format' => '0',
 	'Locale::Maketext::Simple' => 0);
 
+recommends(
+	'Template::Plugin::Clickable' => 0,
+	'Template::Plugin::Clickable::Email' => 0,
+	'Template::Plugin::Subst' => 0,
+	);
+
 include('ExtUtils::AutoInstall');
 auto_install();
 
