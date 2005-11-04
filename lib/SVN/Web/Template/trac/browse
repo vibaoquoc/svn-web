@@ -4,24 +4,24 @@
 <div id="jumprev">
   <form action="[% cgi.self_url %]" method="get">
    <div>
-    <label for="rev">[%|l%]View revision[%END%]:</label>
+    <label for="rev">[%|l%](goto revision)[%END%]:</label>
     <input type="text" id="rev" name="rev" value="[% rev %]" size="4" />
    </div>
   </form>
 </div>
 
-<div class="title"><a href="[% script %]/[% repos %]/log[% path %][% revstr %]">[%|l%]Revision Log[%END%]</a></div>
+<div class="title"><a href="[% script %]/[% repos %]/log[% path %][% revstr %]">[%|l%](revision log)[%END%]</a></div>
 
 [% IF entries.size == 0 %]
-<p>[%|l%]No entries in this directory.[%END%]</p>
+<p>[%|l%](no directory entries)[%END%]</p>
 [% ELSE %]
-<table class="listing" id="dirlist" summary="[%|l%]File and directory listing[%END%]">
+<table class="listing" id="dirlist" summary="[%|l%](browse listing)[%END%]">
   <thead>
     <tr>
-      <th class="name">[%|l%]Name[%END%]</th>
-      <th class="rev">[%|l%]Rev[%END%]</th>
-      <th class="size">[%|l%]Size[%END%]</th>
-      <th class="change">[%|l%]Last Change[%END%]</th>
+      <th class="name">[%|l%](name)[%END%]</th>
+      <th class="rev">[%|l%](revision)[%END%]</th>
+      <th class="size">[%|l%](size)[%END%]</th>
+      <th class="change">[%|l%](last change)[%END%]</th>
     </tr>
   </thead>
   <tbody>

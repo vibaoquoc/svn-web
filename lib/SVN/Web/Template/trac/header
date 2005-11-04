@@ -9,7 +9,7 @@
 
 <html>
   <head>
-    <title>[% IF action == 'list' %][%|l%]Repository List[%END%][% ELSE %][% action %]: /[% repos %][% path %][% END %] ([% IF rev %]Rev: [% rev == youngest_rev ? 'HEAD' : rev %], [% END %][%|l%]via SVN::Web[%END%])</title>
+    <title>[% IF action == 'list' %][%|l%](repository list)[%END%][% ELSE %][% action %]: /[% repos %][% path %][% END %] ([% IF rev %]Rev: [% rev == youngest_rev ? 'HEAD' : rev %], [% END %][%|l%](via)[%END%] SVN::Web)</title>
     [% IF style %]
       <link rel="stylesheet" href="[% style %]" type="text/css" />
     [% ELSE %]
@@ -19,7 +19,7 @@
   <body>
     [% UNLESS nonav %]
       <div id="navpath">
-	<h1><a class="first" href="[% script %]">[%|l%]Repository list[%END%]</a> /  [% url = [script,repos,''] %]  [% url = url.join('/') %]  [% urlpath = ['',''] %]<a href="[% url %]">[% repos %]</a>
+	<h1><a class="first" href="[% script %]">[%|l%](repository list)[%END%]</a> /  [% url = [script,repos,''] %]  [% url = url.join('/') %]  [% urlpath = ['',''] %]<a href="[% url %]">[% repos %]</a>
             [% FOREACH p = navpaths %]
               [% CALL urlpath.splice(-1, 0, p) %]
               [% IF loop.count == loop.size %]

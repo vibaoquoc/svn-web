@@ -3,18 +3,18 @@
 <div class="title">(<a href="[% script %]/[% repos %]/rss[% path %]">[%|l%]RSS[%END%]</a>)</div>
 
 <div class="title"><form action="[% cgi.self_url %]" method="get">
-  [%|l%]Show last[%END%] <input name="limit" size=4 value="[% limit %]" /> changes <input type="submit" name="submit" value="[%|l%]Show[%END%]" /></form>
+  [%|l%](show last)[%END%] <input name="limit" size=4 value="[% limit %]" /> [%|l%](changes)[%END%]</form>
 </div>
 
-<table id="chglist" class="listing" summary="[%|l%]Change log[%END%]">
+<table id="chglist" class="listing" summary="[%|l%](revision log)[%END%]">
   <thead>
     <tr>
-      <th class="date">[%|l%]Date[%END%]</th>
-      <th class="rev">[%|l%]Rev[%END%]</th>
-      <th class="chgset">[%|l%]Chgset[%END%]</th>
-      <th class="author">[%|l%]Author[%END%]</th>
-      [% IF ! isdir %]<th class="diff">[%|l%]Diff[%END%]</th>[% END %]
-      <th class="summary">[%|l%]Log message[%END%]</th>
+      <th class="date">[%|l%](date)[%END%]</th>
+      <th class="rev">[%|l%](file)[%END%]</th>
+      <th class="chgset">[%|l%](revision)[%END%]</th>
+      <th class="author">[%|l%](author)[%END%]</th>
+      [% IF ! isdir %]<th class="diff">[%|l%](diff)[%END%]</th>[% END %]
+      <th class="summary">[%|l%](revision log)[%END%]</th>
     </tr>
   </thead>
   <tbody>
