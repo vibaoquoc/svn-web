@@ -1,6 +1,6 @@
 package SVN::Web;
 use strict;
-our $VERSION = '0.39';
+our $VERSION = '0.40';
 use SVN::Core;
 use SVN::Repos;
 use YAML ();
