@@ -38,6 +38,11 @@ browser to C<index.cgi/I<repos>> to browse it.
 You will also need to make the svnweb directory writeable by the web
 server.
 
+See
+L<http://jc.ngo.org.uk/~nik/cgi-bin/svnweb/index.cgi/jc/browse/nik/CPAN/SVN-Web/trunk/>
+for the SVN::Web source code, browsed using SVN::Web.
+
+
 =head1 DESCRIPTION
 
 SVN::Web provides a web interface to subversion repositories. You can
