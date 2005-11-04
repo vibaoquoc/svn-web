@@ -17,6 +17,7 @@ requires(
         'Text::Diff'  => '0',
 	'Text::Diff::HTML' => '0',
 	'Template::Plugin::Number::Format' => '0',
+	'Locale::Maketext::Lexicon' => 0,
 	'Locale::Maketext::Simple' => 0);
 
 recommends(
