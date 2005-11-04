@@ -648,6 +648,14 @@ sub handler {
 
 L<SVN::Web::action>
 
+=head1 BUGS
+
+Please report any bugs or feature requests to
+C<bug-svn-web@rt.cpan.org>, or through the web interface at
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=SVN-Web>.
+I will be notified, and then you'll automatically be notified of progress on
+your bug as I make changes.
+
 =head1 AUTHORS
 
 Chia-liang Kao C<< <clkao@clkao.org> >>
