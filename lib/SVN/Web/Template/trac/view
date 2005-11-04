@@ -1,4 +1,4 @@
-<p><a href="[% script %]/[% repos %]/log[% path %][% revstr %]">Revision Log</a></p>
+<p><a href="[% script %]/[% repos %]/log[% path %][% revstr %]">Revision Log</a> | <a href="[% script %]/[% repos %]/checkout[% path %][% revstr %]">Checkout</a></p>
 
 <table id="info" summary="Log message">
   <tr>
