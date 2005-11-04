@@ -1,5 +1,5 @@
 bin/svnweb-install
-CHANGES
+CHANGES.pod
 inc/ExtUtils/AutoInstall.pm
 inc/Module/Install.pm
 inc/Module/Install/AutoInstall.pm
