@@ -8,6 +8,17 @@ Changes between SVN::Web versions.
 
 =head1 DESCRIPTION
 
+=head2 0.41, released Nov 4, 2005
+
+=over
+
+=item
+
+Typical.  Update MANIFEST and SIGNATURE, both of which were out of
+date.
+
+=back
+
 =head2 0.40, released Nov 4, 2005
 
 =over
