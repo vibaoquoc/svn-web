@@ -185,3 +185,4 @@ scalar that contains the HTML to be sent to the browser.
 
 =cut
 
+1;
