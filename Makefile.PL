@@ -18,7 +18,8 @@ requires(
 	'Text::Diff::HTML' => '0',
 	'Template::Plugin::Number::Format' => '0',
 	'Locale::Maketext::Lexicon' => 0,
-	'Locale::Maketext::Simple' => 0);
+	'Locale::Maketext::Simple' => 0,
+	'URI' => 0);
 
 recommends(
 	'Template::Plugin::Clickable' => 0,
