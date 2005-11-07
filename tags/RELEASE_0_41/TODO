@@ -1,0 +1,38 @@
+* Write a 'help' action with associated documentation.
+
+* cleanup the template structure with hooks
+
+* diff directory and branch support.
+
+* distinguish different node under same path in different revisions.
+
+* provide link with svn dav url.
+
+* users might only be interested in the latest few active
+  branches/tags - hlb
+  - as well as log history. it shouldn't list all by default.
+
+* some switches for svnweb-install to do upgrade and file merging.
+
+* cache more branch info for performance.
+
+* display branches only if that branch contains the current directory.
+
+* use svn_fs_history_t to get fixed amount of log first.
+
+* sort branch info in browse.
+
+* supply last-modified in header and check it.
+
+* Add an 'annotation' action
+
+* Fix bugs reported through RT
+
+* If there's only one repo then going to the root should (?) automatically
+  take you to it.
+
+* Possibly a difference in the localisation between "Revision" as a
+  title, column heading, or whatever, and "Revision \d+" referring to
+  a specific revision number.
+
+* Templates and I18N should be more tightly coupled.

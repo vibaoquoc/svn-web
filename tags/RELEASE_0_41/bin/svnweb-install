@@ -1,0 +1,91 @@
+#!/usr/bin/perl
+use strict;
+use SVN::Web;
+use Config;
+use File::Copy;
+use File::Basename;
+use File::Find;
+
+die "already have config.yaml" if -e 'config.yaml';
+
+open my $fh, ">config.yaml";
+for (@SVN::Web::PLUGINS) {
+    my $module = $_;
+    s/^(\w)/\U$1/;
+    print $fh lc(${module}).'_class:'.(' 'x(20-(length $_)))."SVN::Web::$_\n";
+}
+
+my %targets = (
+    Template => 'template',
+    I18N     => 'po',
+    Style    => 'css',
+);
+
+while (my ($from, $to) = each %targets) {
+    my $path = $INC{'SVN/Web.pm'};
+    $path =~ s{.pm$}{/$from}i or next;
+
+    find({ wanted => sub { 
+      my $dst_path = $File::Find::name;
+      $dst_path =~ s/$path/$to/;
+
+      if(-d $File::Find::name) {
+          mkdir $dst_path;
+      } else {
+          copy($File::Find::name, $dst_path);
+      }
+    }, no_chdir => 1 }, $path);
+}
+
+print $fh <<END;
+# Suggested minimum filters to run log messages through.  Note that
+# it is not fatal if one of these filters is not installed.
+log_msg_filters:
+  - name: standard
+    filter: html
+  - name: standard
+    filter: html_line_break
+  - name: Clickable
+    filter: clickable
+  - name: Clickable::Email
+    filter: filter
+
+# set your repository path below:
+#
+#repos:
+#  test: '/tmp/svnweb-test'
+#  test2: '/tmp/svnweb-test2'
+#
+# or a parent path contains repositories
+#
+#reposparent: '/path/to/repositories'
+#
+# if you set a parent you can block specific repositories
+# like this:
+#
+#block:
+#  - 'blocked1'
+#  - 'blocked2'
+#
+
+END
+
+close $fh;
+
+open $fh, '>index.cgi';
+print $fh <<"END";
+$Config::Config{startperl} -w
+#use lib '.';
+#use lib '../lib';
+eval 'use CGI::Carp qw(fatalsToBrowser)';
+use SVN::Web;
+SVN::Web::run_cgi();
+END
+
+close $fh;
+
+chmod 0755,'index.cgi';
+
+# XXX: export the template too
+
+print "SVN::Web now installed! please see config.yaml\n";
