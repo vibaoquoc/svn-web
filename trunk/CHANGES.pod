@@ -8,6 +8,18 @@ Changes between SVN::Web versions.
 
 =head1 DESCRIPTION
 
+=head2 0.42
+
+=over
+
+=item
+
+When viewing a diff, the I<trac> templates show the two revision numbers
+being compared, and include a link allowing the user to reverse the order
+of the diff.
+
+=back
+
 =head2 0.41, released Nov 4, 2005
 
 =over
@@ -59,7 +71,7 @@ A fix for rt#12431.  URLs without trailing slashes are fixed.
 
 =item
 
-A mechanism to 'stack' Template Toolkit filters. You can run easily run 
+A mechanism to 'stack' Template Toolkit filters. You can easily run 
 log messages through an arbitrary number of filters, without causing 
 problems if one or more of the filters is not installed.
 
