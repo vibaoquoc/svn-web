@@ -230,3 +230,16 @@ msgstr "The <tt>reposparent</tt> configuration entry specifies a directory "
 "The error from Perl was:\n"
 "\n"
 "<tt>%2</tt>"
+
+msgid "(two revisions must be provided)"
+msgstr "To carry out a diff you must specify the two revisions that you "
+"want to compare.  You haven't selected any.  Please go back, and "
+"select the two revisions that you want to compare."
+
+msgid "(rev1 and rev2 must be different)"
+msgstr "To carry out a diff you must specify the two revisions that you "
+"want to compare.  You only selected one revision.  Please go back, and "
+"select the revision you want to compare against."
+
+msgid "(diff selected revisions)"
+msgstr "Show diff of selected revisions"
