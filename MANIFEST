@@ -15,8 +15,6 @@ inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
 lib/SVN/Web.pm
 lib/SVN/Web/action.pm
-lib/SVN/Web/Branch.pm
-lib/SVN/Web/Branch/YAML.pm
 lib/SVN/Web/Browse.pm
 lib/SVN/Web/Checkout.pm
 lib/SVN/Web/Diff.pm

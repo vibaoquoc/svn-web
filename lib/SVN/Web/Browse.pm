@@ -173,8 +173,6 @@ sub run {
 	     data => { entries => $entries,
 		       rev => $rev,
 		       youngest_rev => $fs->youngest_rev(),
-		       branchto => $self->{branch}->branchto ($self->{path}, $rev),
-		       branchfrom => $self->{branch}->branchfrom ($self->{path}, $rev),
 		     }};
 }
 
