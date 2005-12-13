@@ -6,6 +6,7 @@ use Text::Diff;
 use SVN::Core;
 use SVN::Repos;
 use SVN::Fs;
+use SVN::Web::X;
 
 eval 'use SVN::DiffEditor 0.09; require IO::String; 1' and my $has_svk = 1;
 
@@ -67,19 +68,19 @@ The second revision of the file to compare.
 
 =back
 
-In addition, if C<mime> is C<html> then raw HTML is returned for immediate insertion
-in to the template.  If C<mime> is C<text> then the template is bypassed and
-plain text is returned.
+In addition, if C<mime> is C<html> then raw HTML is returned for
+immediate insertion in to the template.  If C<mime> is C<text> then
+the template is bypassed and plain text is returned.
 
 =head1 EXCEPTIONS
 
 =over 4
 
-=item C<path does not exist>
+=item (path %1 does not exist in revision %2)
 
-The file does not exist in C<rev1> of the repository.
+The given path is not present in the repository at the given revision.
 
-=item C<directory diff requires svk>
+=item (directory diff requires svk)
 
 Showing the difference between two directories needs the SVN::DiffEditor
 module.
@@ -110,12 +111,23 @@ sub run {
     my $root2 = $fs->revision_root ($rev2);
     my $kind = $root1->check_path ($self->{path});
 
-    die "path does not exist" if $kind == $SVN::Node::none;
+    if($kind == $SVN::Node::none) {
+	SVN::Web::X->throw(error => '(path %1 does not exist in revision %2)',
+			   vars => [$self->{path}, $rev1]);
+    }
+
+    $kind = $root2->check_path($self->{path});
+
+    if($kind == $SVN::Node::none) {
+	SVN::Web::X->throw(error => '(path %1 does not exist in revision %2)',
+			   vars => [$self->{path}, $rev2]);
+    }
 
     my $output;
 
     if ($kind == $SVN::Node::dir) {
-	die "directory diff requires svk"
+	SVN::Web::X->throw(error => '(directory diff requires svk)',
+			   vars => [])
 	    unless $has_svk;
 
 	my $path = $self->{path};

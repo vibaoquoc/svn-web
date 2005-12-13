@@ -3,6 +3,7 @@ use strict;
 use SVN::Core;
 use SVN::Repos;
 use SVN::Fs;
+use SVN::Web::X;
 
 =head1 NAME
 
@@ -93,6 +94,13 @@ The repository's youngest revision.
 
 =head1 EXCEPTIONS
 
+=over 4
+
+=item (path %1 does not exist in revision %2)
+
+The given path is not present in the repository at the given revision.
+
+=back
 
 =cut
 
@@ -123,7 +131,11 @@ sub run {
     $path =~ s|/$|| unless $path eq '/';
     my $root = $fs->revision_root ($rev);
     my $kind = $root->check_path ($path);
-    die "path '$path' does not exist in revision $rev" if $kind == $SVN::Node::none;
+
+    if($kind == $SVN::Node::none) {
+      SVN::Web::X->throw(error => '(path %1 does not exist in revision %2)',
+			 vars => [$path, $rev]);
+    }
 
     die "not a directory in browse" unless $kind == $SVN::Node::dir;
 

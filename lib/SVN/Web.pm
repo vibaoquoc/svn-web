@@ -1,3 +1,4 @@
+# -*- Mode: cperl; cperl-indent-level: 4 -*-
 package SVN::Web;
 use strict;
 our $VERSION = '0.41';
@@ -7,6 +8,7 @@ use YAML ();
 use Template;
 use URI;
 use File::Spec::Unix;
+use SVN::Web::X;
 eval 'use FindBin';
 {
 no warnings 'uninitialized';
@@ -387,17 +389,29 @@ my $repospool = SVN::Pool->new;
 sub get_repos {
     my ($repos) = @_;
 
-    die "please configure your repository"
+    SVN::Web::X->throw(error => '(unconfigured repository)',
+		       vars => [])
 	unless $config->{repos} || $config->{reposparent};
 
-    die "no such repository $repos"
+    my $repo_path = 
+      $config->{reposparent} ? "$config->{reposparent}/$repos"
+	: $config->{repos}{$repos};
+
+    SVN::Web::X->throw(error => '(no such repo %1 %2)',
+		       vars => [$repos, $repo_path])
 	unless ($config->{reposparent} &&
 		-d "$config->{reposparent}/$repos")
-	    || exists $config->{repos}{$repos};
+	    || exists $config->{repos}{$repos} && -d $config->{repos}{$repos};
 
-    $REPOS{$repos} ||= SVN::Repos::open
-	($config->{reposparent} ? "$config->{reposparent}/$repos"
-	 : $config->{repos}{$repos}, $repospool) or die $!;
+    eval {
+	$REPOS{$repos} ||= SVN::Repos::open($repo_path, $repospool);
+    };
+
+    if($@) {
+	my $e = $@;
+	SVN::Web::X->throw(error => '(SVN::Repos::open failed: %1 %2)',
+			   vars => [$repo_path, $e]);
+    }
 
     if ( $config->{block} ) {
         foreach my $blocked ( @{ $config->{block} } ) {
@@ -412,7 +426,8 @@ sub repos_list {
     my @repos;
     if ($config->{reposparent}) {
         opendir my $dh, "$config->{reposparent}"
-            or die "Cannot read $config->{reposparent}: $!";
+            or SVN::Web::X->throw(error => '(opendir reposparent %1 %2)',
+				  vars => [$config->{reposparent}, $!]);
 
         foreach my $dir (grep { -d "$config->{reposparent}/$_" && ! /^\./ } readdir $dh) {
             push @repos, $dir;
@@ -434,8 +449,9 @@ sub get_handler {
 	$pkg =~ s/^(\w)/\U$1/;
 	$pkg = __PACKAGE__."::$pkg";
     }
-    die "no such plugin $pkg" unless $pkg;
-    eval "require $pkg && $pkg->can('run')" or die $@;
+    eval "require $pkg && $pkg->can('run')" or
+      SVN::Web::X->throw(error => '(missing package %1 for action %2: %3)',
+			 vars => [$pkg, $cfg->{action}, $@]);
     my $repos = $cfg->{repos} ? $REPOS{$cfg->{repos}} : undef;
     return $pkg->new (%$cfg, reposname => $cfg->{repos},
 		      repos => $repos,
@@ -449,27 +465,26 @@ sub run {
 
     my $obj;
     my $html;
+
     if (defined $cfg->{repos} && length $cfg->{repos}) {
-        get_repos ($cfg->{repos});
+	get_repos ($cfg->{repos});
     }
 
     if ($cfg->{repos} && $REPOS{$cfg->{repos}}) {
-        @{$cfg->{navpaths}} = File::Spec::Unix->splitdir ($cfg->{path});
-        shift @{$cfg->{navpaths}};
-        # should use attribute or things alike
-
-        my $branch = get_handler ({%$cfg, action => 'branch'});
-        $obj = get_handler ({%$cfg, branch => $branch});
+	@{$cfg->{navpaths}} = File::Spec::Unix->splitdir ($cfg->{path});
+	shift @{$cfg->{navpaths}};
+	# should use attribute or things alike
+	
+	my $branch = get_handler ({%$cfg, action => 'branch'});
+	$obj = get_handler ({%$cfg, branch => $branch});
     } else {
-        $obj = get_handler ({%$cfg, action => 'list'});
+	$obj = get_handler ({%$cfg, action => 'list'});
     }
 
     loc_lang($cfg->{lang} ? $cfg->{lang} : ());
-    $html = eval { $obj->run };
+    $html = $obj->run();
 
-    die "operation failed: $@" if $@;
-
-    $cfg->{output_sub}->($cfg, $html);
+    return $html;
 }
 
 sub cgi_output {
@@ -545,25 +560,45 @@ sub run_cgi {
     my $cgi_class = $config->{cgi_class} || (eval { require CGI::Fast; 1 } ? 'CGI::Fast' : 'CGI');
 
     while (my $cgi = $cgi_class->new) {
-	# /<repository>/<action>/<path>/<file>?others
-	my (undef, $repos, $action, $path) = split ('/', $cgi->path_info, 4);
-	$action ||= 'browse';
-	$path ||= '';
+	my($html, $cfg);
+	eval {
+	    # /<repository>/<action>/<path>/<file>?others
+	    my (undef, $repos, $action, $path) = split ('/', $cgi->path_info, 4);
+	    $action ||= 'browse';
+	    $path ||= '';
 
-	die "action '$action' not supported" 
-	  unless scalar grep(lc($_) eq lc($action), @{$config->{actions}});
+	    my $base_uri = URI->new($cgi->url())->as_string();
+	    $base_uri =~ s{/index.cgi}{};
 
-	my $base_uri = URI->new($cgi->url())->as_string();
-	$base_uri =~ s{/index.cgi}{};
+	    $cfg = { repos => $repos,
+		     action => $action,
+		     path => "/$path",
+		     script => $ENV{SCRIPT_NAME},
+		     base_uri => $base_uri,
+		     style => $config->{style},
+		     cgi => $cgi,
+		   };
+	
+	
+	    SVN::Web::X->throw(error => '(action %1 not supported)',
+			       vars => [$action])
+		unless scalar grep(lc($_) eq lc($action), @{$config->{actions}});
+	
+	    $html = run($cfg);
+	};
 
-	run ({ repos => $repos,
-	       action => $action,
-	       path => '/'.$path,
-	       script => $ENV{SCRIPT_NAME},
-	       base_uri => $base_uri,
-               output_sub => \&cgi_output,
-	       style => $config->{style},
-	       cgi => $cgi});
+	my $e;
+	if($e = SVN::Web::X->caught()) {
+	    $html->{template} = 'x';
+	    $html->{data}{error_msg} = loc($e->error(), @{ $e->vars() });
+	} else {
+	    if($@) {
+		$html->{template} = 'error';
+		$html->{data}{error_msg} = $@;
+	    }
+	}
+
+	cgi_output($cfg, $html);
 	last if $cgi_class eq 'CGI';
     }
 }
@@ -633,26 +668,44 @@ sub handler {
     $repos ||= '';
 
     if ($repos) {
-        $script = $1 if $r->uri =~ m|^((?:/\w+)+?)/\Q$repos\E| or die "can't find script";
+        $script = $1 if $r->uri =~ m|^((?:/\w+)+?)/\Q$repos\E| or
+	  SVN::Web::X->throw(error => '(can\'t find script in %1)',
+			     vars => [$r->uri]);
     }
     chdir ($base);
     $pool ||= SVN::Pool->new_default;
     load_config ('config.yaml');
 
-    my (undef, $action, $path) = split ('/', $r->path_info, 3);
-    $action ||= 'browse';
-    $path ||= '';
+    my($html, $cfg);
+    eval {
+	my (undef, $action, $path) = split ('/', $r->path_info, 3);
+	$action ||= 'browse';
+	$path ||= '';
 
-    run ({ repos => $repos,
-	   action => $action,
-	   script => $script,
-	   path => '/'.$path,
-           output_sub => \&mod_perl_output,
-	   request => $r,
-	   style   => $config->{style},
-           cgi     => ref ($r) eq 'Apache::Request' ? $r : CGI->new});
+	$cfg = { repos => $repos,
+		 action => $action,
+		 script => $script,
+		 path => "/$path",
+		 request => $r,
+		 style => $config->{style},
+		 cgi => ref($r) eq 'Apache::Request' ? $r : CGI->new(),
+	       };
 
-   return &Apache::OK;
+	SVN::Web::X->throw(error => '(action %1 not supported)',
+			   vars => [$action])
+	    unless scalar grep(lc($_) eq lc($action), @{$config->{actions}});
+
+	$html = run($cfg);
+    };
+
+    my $e;
+    if($e = SVN::Web::X->caught()) {
+	$html->{template} = 'x';
+	$html->{data}{error_msg} = loc($e->error(), @{ $e->vars() });
+    }
+
+    mod_perl_output($cfg, $html);
+    return &Apache::OK;
 }
 
 =head1 SEE ALSO
