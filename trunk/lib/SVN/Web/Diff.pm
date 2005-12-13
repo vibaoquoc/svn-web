@@ -7,6 +7,7 @@ use SVN::Core;
 use SVN::Repos;
 use SVN::Fs;
 use SVN::Web::X;
+use List::Util qw(max min);
 
 eval 'use SVN::DiffEditor 0.09; require IO::String; 1' and my $has_svk = 1;
 
@@ -41,6 +42,23 @@ The first revision of the file to compare.
 
 The second revision of the file to compare.
 
+=item revs
+
+A list of two or more revisions.  If present, the smallest number in
+the list is assigned to C<rev1> (overriding any given C<rev1> value) and the
+largest number in the list is assigned to C<rev2> (overriding any given 
+C<rev2> value).
+
+In other words:
+
+    ...?rev1=5;rev2=10
+
+is equal to:
+
+    ...?revs=10;revs=5
+
+This supports the "diff between arbitrary revisions" functionality.
+
 =item mime
 
 The desired output format.  The default is C<html> for an HTML, styled diff
@@ -60,11 +78,13 @@ default if not set.
 
 =item rev1
 
-The first revision of the file to compare.
+The first revision of the file to compare.  Corresponds with the C<rev1>
+parameter, either set explicitly, or extracted from C<revs>.
 
 =item rev2
 
-The second revision of the file to compare.
+The second revision of the file to compare.  Corresponds with the C<rev2>
+parameter, either set explicitly, or extracted from C<revs>.
 
 =back
 
@@ -85,6 +105,15 @@ The given path is not present in the repository at the given revision.
 Showing the difference between two directories needs the SVN::DiffEditor
 module.
 
+=item (two revisions must be provided)
+
+No revisions were given to diff against.
+
+=item (rev1 and rev2 must be different)
+
+Either only one revision number was given, or several were given, but
+they're the same number.
+
 =back
 
 =cut
@@ -103,6 +132,25 @@ sub run {
     my $fs      = $self->{repos}->fs;
     my $rev1    = $self->{cgi}->param('rev1');
     my $rev2    = $self->{cgi}->param('rev2');
+    my @revs    = $self->{cgi}->param('revs');
+
+    if(@revs) {
+	$rev1 = min(@revs);
+	$rev2 = max(@revs);
+    }
+
+    SVN::Web::X->throw(error => '(two revisions must be provided)',
+		       vars  => [])
+	unless defined $rev1 and defined $rev2;
+
+    SVN::Web::X->throw(error => '(rev1 and rev2 must be different)',
+		       vars  => [])
+	if @revs and @revs < 2;
+
+    SVN::Web::X->throw(error => '(rev1 and rev2 must be different)',
+		       vars  => [])
+	if $rev1 == $rev2;
+
     my $mime    = $self->{cgi}->param('mime') || 'text/html';
     my $context = $self->{cgi}->param('context')
                   || $self->{config}->{diff_context};
