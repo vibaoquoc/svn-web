@@ -53,9 +53,6 @@ browse the tree, view history of a directory or a file, see what's
 changed in a specific revision, track changes with RSS, and also view
 diff.
 
-SVN::Web also tracks the branching feature (node copy) of subversion,
-so you can easily see the relationship between branches.
-
 =head1 CONFIGURATION
 
 Various aspects of SVN::Web's behaviour can be controlled through the
@@ -435,10 +432,6 @@ sub repos_list {
 sub get_handler {
     my $cfg = shift;
     my $pkg;
-
-    warn $cfg->{action};
-    use Data::Dumper;
-    warn Dumper($config->{actions});
 
     if(exists $config->{actions}{$cfg->{action}}) {
 	if(ref($config->{actions}{$cfg->{action}}) eq 'HASH') {
