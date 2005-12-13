@@ -55,7 +55,19 @@ default if not set.
 
 =head1 TEMPLATE VARIABLES
 
-None.  If C<mime> is C<html> then raw HTML is returned for immediate insertion
+=over 8
+
+=item rev1
+
+The first revision of the file to compare.
+
+=item rev2
+
+The second revision of the file to compare.
+
+=back
+
+In addition, if C<mime> is C<html> then raw HTML is returned for immediate insertion
 in to the template.  If C<mime> is C<text> then the template is bypassed and
 plain text is returned.
 
@@ -152,7 +164,9 @@ sub run {
 	$output =~ s/^\+ /<span class="diff-leader">+ <\/span>/mg;
 
 	return { template => 'diff',
-		 data => { body => $output }};
+		 data => { rev1 => $rev1,
+			   rev2 => $rev2,
+			   body => $output }};
     } else {
 	return { mimetype => $mime,
 		 body => $output };
