@@ -16,10 +16,9 @@ In F<config.yaml>
 
   actions:
     ...
-    - revision
+    revision:
+      class: SVN::Web::Revision
     ...
-
-  revision_class: SVN::Web::Revision
 
 =head1 DESCRIPTION
 

@@ -15,10 +15,9 @@ In F<config.yaml>
 
   actions:
     ...
-    - checkout
+    checkout:
+      class: SVN::Web::Checkout
     ...
-
-  checkout_class: SVN::Web::Checkout
 
 =head1 DESCRIPTION
 

@@ -15,10 +15,9 @@ In F<config.yaml>
 
   actions:
     ...
-    - browse
+    browse:
+      class: SVN::Web::Browse
     ...
-
-  browse_class: SVN::Web::Browse
 
 =head1 DESCRIPTION
 

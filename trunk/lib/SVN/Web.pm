@@ -218,28 +218,21 @@ class for a particular action.  This lets you implement your own actions,
 or override the behaviour of existing actions.
 
 The complete list of actions is listed in the C<actions> configuration
-directive.  The default value for this directive if it is not present is;
-
-  actions:
-    - browse
-    - checkout
-    - diff
-    - list
-    - log
-    - revision
-    - RSS
-    - view
+directive.
 
 If you delete items from this list then the corresponding action becomes
 unavailable.  For example, if you would like to prevent people from retrieving
 an RSS feed of changes, just delete the C<- RSS> entry from the list.
 
-To provide your own behaviour for standard actions, specify an C<<
-<action>_class >> configuration that names the class that implements
-the action.  For example, to specify your own class that implements
-the C<view> action;
+To provide your own behaviour for standard actions just specify a
+different value for the C<class> key.  For example, to specify your
+own class that implements the C<view> action;
 
-  view_class: My::SVN::Web::View
+  actions:
+    ...
+    view:
+      class: My::View::Class
+    ...
 
 If you wish to implement your own action, give the action a name, add
 it to the C<actions> list, and then specify the class that carries out
@@ -249,19 +242,19 @@ For example, SVN::Web currently provides no equivalent to the
 Subversion C<annotate> command.  If you implement this, you would write:
 
   actions:
-    - ...
-    - annotate
-    - ...
+    ...
+    annotate:
+      class: My::Class::That::Implements::Annotate
+    ...
 
-  annotate_class: My::Class::That::Implements::Annotate
+Please feel free to submit any classes that implement additional
+functionality back to the maintainers, so that they can be included in
+the distribution.
 
-Naturally, you would submit this back to the maintainers so that it can
-be included in the standard distribution.
-
-If an action is listed in C<actions> and there is no corresponding C<<
-<action>_class >> directive then SVN::Web takes the action name,
-converts the first character to uppercase, and then looks for an C<<
-SVN::Web::<Action> >> package.
+If an action is listed in C<actions> and there is no corresponding
+C<class> directive then SVN::Web takes the action name, converts the
+first character to uppercase, and then looks for an
+C<<SVN::Web::<Action> >> package.
 
 =head2 CGI class
 
@@ -373,8 +366,6 @@ my $config;
 
 my %REPOS;
 
-our @DEFAULT_ACTIONS = qw(browse checkout diff list log revision RSS view);
-
 sub load_config {
     my $file = shift || 'config.yaml';
     return $config ||= YAML::LoadFile ($file);
@@ -443,7 +434,20 @@ sub repos_list {
 
 sub get_handler {
     my $cfg = shift;
-    my $pkg = $config->{"$cfg->{action}_class"};
+    my $pkg;
+
+    warn $cfg->{action};
+    use Data::Dumper;
+    warn Dumper($config->{actions});
+
+    if(exists $config->{actions}{$cfg->{action}}) {
+	if(ref($config->{actions}{$cfg->{action}}) eq 'HASH') {
+	    if(exists $config->{actions}{$cfg->{action}}{class}) {
+		$pkg = $config->{actions}{$cfg->{action}}{class};
+	    }
+	}
+    }
+
     unless ($pkg) {
 	$pkg = $cfg->{action};
 	$pkg =~ s/^(\w)/\U$1/;
@@ -474,9 +478,7 @@ sub run {
 	@{$cfg->{navpaths}} = File::Spec::Unix->splitdir ($cfg->{path});
 	shift @{$cfg->{navpaths}};
 	# should use attribute or things alike
-	
-	my $branch = get_handler ({%$cfg, action => 'branch'});
-	$obj = get_handler ({%$cfg, branch => $branch});
+	$obj = get_handler ({%$cfg});
     } else {
 	$obj = get_handler ({%$cfg, action => 'list'});
     }
@@ -493,6 +495,7 @@ sub cgi_output {
     if (ref ($html)) {
 	print $cfg->{cgi}->header(-charset => $html->{charset} || 'UTF-8',
 				  -type => $html->{mimetype} || 'text/html');
+
 	if ($html->{template}) {
 	    $template->process ($html->{template},
 				{ %$cfg,
@@ -553,8 +556,6 @@ sub run_cgi {
     $pool ||= SVN::Pool->new_default;
     load_config ('config.yaml');
     $template ||= get_template ();
-
-    $config->{actions} ||= \@DEFAULT_ACTIONS;
     $config->{diff_context} ||= 3;
 
     my $cgi_class = $config->{cgi_class} || (eval { require CGI::Fast; 1 } ? 'CGI::Fast' : 'CGI');
@@ -579,10 +580,9 @@ sub run_cgi {
 		     cgi => $cgi,
 		   };
 	
-	
 	    SVN::Web::X->throw(error => '(action %1 not supported)',
 			       vars => [$action])
-		unless scalar grep(lc($_) eq lc($action), @{$config->{actions}});
+		unless exists $config->{actions}{lc($action)};
 	
 	    $html = run($cfg);
 	};
@@ -593,7 +593,7 @@ sub run_cgi {
 	    $html->{data}{error_msg} = loc($e->error(), @{ $e->vars() });
 	} else {
 	    if($@) {
-		$html->{template} = 'error';
+		$html->{template} = 'x';
 		$html->{data}{error_msg} = $@;
 	    }
 	}
@@ -693,7 +693,7 @@ sub handler {
 
 	SVN::Web::X->throw(error => '(action %1 not supported)',
 			   vars => [$action])
-	    unless scalar grep(lc($_) eq lc($action), @{$config->{actions}});
+	    unless exists $config->{actions}{lc($action)};
 
 	$html = run($cfg);
     };
