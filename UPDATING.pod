@@ -8,6 +8,39 @@ Notes on updating from previous versions of SVN::Web
 
 =head1 DESCRIPTION
 
+=head2 0.41 to 0.42
+
+=over 4
+
+=item
+
+The format for specifying actions in the configuration file has changed.
+In addition, there are no longer any default actions -- any actions not
+specified in the configuration file will be ignored.
+
+To retain existing functionality you must ensure that the following
+appears in F<config.yaml>.
+
+  actions:
+    browse:
+      class: SVN::Web::Browse
+    checkout:
+      class: SVN::Web::Checkout
+    diff:
+      class: SVN::Web::Diff
+    list:
+      class: SVN::Web::List
+    log:
+      class: SVN::Web::Log
+    revision:
+      class: SVN::Web::Revision
+    rss:
+      class: SVN::Web::RSS
+    view:
+      class: SVN::Web::View
+
+=back
+
 =head2 0.40 to 0.41
 
 After installing the new module you should copy

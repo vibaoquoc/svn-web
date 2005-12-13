@@ -21,10 +21,9 @@ In F<config.yaml>
 
   actions:
     ...
-    - diff
+    diff:
+      class: SVN::Web::Diff
     ...
-
-  diff_class: SVN::Web::Diff
 
 =head1 DESCRIPTION
 
