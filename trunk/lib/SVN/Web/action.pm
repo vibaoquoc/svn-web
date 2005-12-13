@@ -183,6 +183,14 @@ scalar that contains the HTML to be sent to the browser.
 
   return "<p>hello, world</p>";
 
+=head1 ERRORS AND EXCEPTIONS
+
+If your action needs to fail for some reason -- perhaps the parameters
+passed to it are incorrect, or the user lacks the necessary permissions,
+then throw an exception.
+
+Exceptions, along with examples, are described in L<SVN::Web::X>.
+
 =cut
 
 1;
