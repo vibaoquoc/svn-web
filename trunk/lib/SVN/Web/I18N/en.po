@@ -92,7 +92,7 @@ msgstr "No repositories are available for browsing."
 
 #: ../Template/trac/footer:4
 msgid "(powered by)"
-msgstr "Powered by"
+msgstr "Powered by SVN::Web"
 
 #: ../Template/trac/revision:11
 msgid "(previous revision)"
