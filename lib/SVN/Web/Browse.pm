@@ -158,10 +158,22 @@ sub run {
     # TODO: custom sorting
     @$entries = sort {($b->{isdir} <=> $a->{isdir}) || ($a->{name} cmp $b->{name})} @$entries;
 
+    my @props = ();
+    foreach my $prop_name (qw(svn:externals)) {
+      my $prop_value = $root->node_prop($path, $prop_name);
+      if(defined $prop_value) {
+	$prop_value =~ s/\s*\n$//ms;
+	push @props, { name  => $prop_name,
+		       value => $prop_value,
+		       };
+      }
+    }
+
     return { template => 'browse',
 	     data => { entries => $entries,
 		       rev => $rev,
 		       youngest_rev => $fs->youngest_rev(),
+		       props => \@props,
 		     }};
 }
 
