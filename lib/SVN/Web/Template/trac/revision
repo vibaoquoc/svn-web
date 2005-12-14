@@ -17,6 +17,15 @@
   </ul>
 </div>
 
+<div id="jumprev">
+  <form action="[% cgi.self_url %]" method="get">
+   <div>
+    <label for="rev">[%|l%](goto revision)[%END%]</label>
+    <input type="text" id="rev" name="rev" value="[% rev %]" size="4" />
+   </div>
+  </form>
+</div>
+
 <h1>[%|l%](revision)[%END%] [% rev %]</h1>
 
 <dl id="overview">
