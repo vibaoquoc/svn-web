@@ -110,6 +110,9 @@ msgstr "Repository List"
 msgid "(revision log)"
 msgstr "Revision Log"
 
+msgid "(view revision log)"
+msgstr "View Revision Log"
+
 #: ../Template/trac/revision:7
 msgid "(revision navigation)"
 msgstr "Revision Navigation"
