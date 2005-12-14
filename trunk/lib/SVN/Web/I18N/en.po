@@ -247,3 +247,9 @@ msgstr "To carry out a diff you must specify the two revisions that you "
 
 msgid "(diff selected revisions)"
 msgstr "Show diff of selected revisions"
+
+msgid "(prop-name)"
+msgstr "Property"
+
+msgid "(prop-value)"
+msgstr "Value"
