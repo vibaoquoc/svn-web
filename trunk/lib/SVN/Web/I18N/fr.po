@@ -30,9 +30,8 @@ msgid "(checkout)"
 msgstr "Téléchargement"
 
 #: ../Template/trac/list:3
-# fuzzy: needs 'nbsp;:'
 msgid "(choose repos)"
-msgstr "Veuillez sélectionner le dépôt à parcourir"
+msgstr "Veuillez sélectionner le dépôt à parcourir&nbsp;:"
 
 #: ../Template/trac/revision:43 ../Template/trac/revision:62
 msgid "(copied from)"

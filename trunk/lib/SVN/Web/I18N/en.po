@@ -31,7 +31,7 @@ msgstr "Checkout"
 
 #: ../Template/trac/list:3
 msgid "(choose repos)"
-msgstr "Please select a repository to browse"
+msgstr "Please select a repository to browse:"
 
 #: ../Template/trac/revision:43 ../Template/trac/revision:62
 msgid "(copied from)"
