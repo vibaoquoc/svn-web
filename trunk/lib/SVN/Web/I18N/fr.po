@@ -59,9 +59,8 @@ msgid "(from %1:%2)"
 msgstr "(Depuis %1:%2)"
 
 #: ../Template/trac/browse:7
-# fuzzy: needs 'nbsp;:'
 msgid "(goto revision)"
-msgstr "Voir la révision"
+msgstr "Voir la révision&nbsp;:"
 
 #: ../Template/trac/browse:24
 msgid "(last change)"

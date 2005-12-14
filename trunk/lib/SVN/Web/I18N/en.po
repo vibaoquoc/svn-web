@@ -60,7 +60,7 @@ msgstr ""
 
 #: ../Template/trac/browse:7
 msgid "(goto revision)"
-msgstr "View Revision"
+msgstr "View Revision:"
 
 #: ../Template/trac/browse:24
 msgid "(last change)"
