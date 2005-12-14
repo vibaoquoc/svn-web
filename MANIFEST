@@ -19,6 +19,7 @@ lib/SVN/Web/Browse.pm
 lib/SVN/Web/Checkout.pm
 lib/SVN/Web/Diff.pm
 lib/SVN/Web/I18N/en.po
+lib/SVN/Web/I18N/fr.po
 lib/SVN/Web/I18N/zh_cn.po
 lib/SVN/Web/I18N/zh_tw.po
 lib/SVN/Web/List.pm
