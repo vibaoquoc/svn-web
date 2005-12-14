@@ -27,7 +27,7 @@
   <dd class="author">[% author || '(no author)' %]</dd>
 
   <dt class="message">[%|l%](revision log)[%END%]:</dt>
-  <dd class="message"><p>[% msg | log_msg %]</p></dd>
+  <dd class="message">[% msg | log_msg %]</dd>
 
   <dt class="files">[%|l%](files)[%END%]:</dt>
   <dd class="files">
