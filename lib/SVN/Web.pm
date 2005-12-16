@@ -521,7 +521,6 @@ sub run {
        			     opts => exists $config->{actions}{$cfg->{action}}{opts} ?
 			                    $config->{actions}{$cfg->{action}}{opts} :
 			                    { },
-			     opts => $config->{actions}{$cfg->{actions}}{opts},
 			    });
     } else {
 	$cfg->{action} = 'list';
