@@ -27,7 +27,8 @@ of the diff.
 =item
 
 The syntax for specifying permitted actions, and the classes that implement
-them, has changed.  See L<UPDATING> for more information.
+them, has changed.  See L<UPDATING> for more information.  This mechanism
+also allows for easy configuration of per-action options.
 
 =item
 
@@ -46,9 +47,10 @@ Fixes rt#15813.
 
 =item
 
-If you only have one repository configured then the C<list> action will
-immediately redirect to browsing that repository, saving the user from
-having to click through an intermediate page.
+If you only have one repository configured then the C<list> action can be
+configured to immediately redirect to browsing that repository, saving the
+user from having to click through an intermediate page.  See L<SVN::Web::List>
+for more information.
 
 =back
 
