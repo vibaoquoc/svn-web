@@ -45,6 +45,25 @@ There have been several changes to the F<trac> templates.  If you have made
 any local modifications then you will need to merge your changes in to the
 new templates.
 
+=item
+
+Use of the C<templatedir> configuration directive is now deprecated.  You
+should use C<templatedirs> instead.  This is to support third party actions
+that supply their own templates in different directories.
+
+C<templatedir> in the configuration file will continue to work, but you
+should change existing entries of the form:
+
+  templatedir: '/path/to/directory'
+
+to this form:
+
+  templatedirs:
+    - '/path/to/directory'
+
+A configuration file that specifies both C<templatedir> and C<templatedirs>
+will generate an exception when anyone browses the repository.
+
 =back
 
 =head2 0.40 to 0.41

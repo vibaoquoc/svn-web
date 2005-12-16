@@ -36,7 +36,7 @@ sub import {
 			       view     => { class => 'SVN::Web::View' },
 			      },
 		   cgi_class   => 'CGI',
-		   templatedir => 'lib/SVN/Web/Template/trac',
+		   templatedirs => [ 'lib/SVN/Web/Template/trac' ],
 		   repos       => \%repos,
 		 };
 

@@ -256,3 +256,11 @@ msgstr "Property"
 
 msgid "(prop-value)"
 msgstr "Value"
+
+msgid "(templatedir and templatedirs defined)"
+msgstr "The configuration file contains <tt>templatedir</tt> and a "
+"<tt>templatedirs</tt> (note: extra 's') directives.  These directives "
+"are mutually incompatible.\n"
+"\n"
+"You probably need to remove the <tt>templatedir</tt> directive, and "
+"include its value in the <tt>templatedirs</tt> directive."
