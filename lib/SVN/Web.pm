@@ -389,10 +389,7 @@ my %REPOS;
 
 sub load_config {
     my $file = shift || 'config.yaml';
-    return $config ||= YAML::LoadFile ($file);
-}
-
-sub check_config {
+    $config ||= YAML::LoadFile ($file);
 
     # Deal with possibly conflicting 'templatedir' and 'templatedirs' settings.
 
@@ -409,9 +406,10 @@ sub check_config {
 
     # If they're both set then throw an error
     if(exists $config->{templatedir} and exists $config->{templatedirs}) {
-	SVN::Web::X->throw(error => '(templatedir and templatedirs defined)',
-			   vars  => []);
+        die "templatedir and templatedirs both defined in config.yaml";
     }
+
+    return;
 }
 
 sub set_config {
@@ -630,8 +628,6 @@ sub run_cgi {
 		     cgi => $cgi,
 		   };
 	
-	    check_config();
-	
 	    SVN::Web::X->throw(error => '(action %1 not supported)',
 			       vars => [$action])
 		unless exists $config->{actions}{lc($action)};
@@ -746,7 +742,6 @@ sub handler {
        		                { },
 	       };
 
-	check_config();
 	SVN::Web::X->throw(error => '(action %1 not supported)',
 			   vars => [$action])
 	    unless exists $config->{actions}{lc($action)};
