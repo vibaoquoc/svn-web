@@ -96,7 +96,7 @@ print $fh <<"END";
 $Config::Config{startperl} -w
 #use lib '.';
 #use lib '../lib';
-eval 'use CGI::Carp qw(fatalsToBrowser)';
+use CGI::Carp qw(fatalsToBrowser);
 use SVN::Web;
 SVN::Web::run_cgi();
 END
