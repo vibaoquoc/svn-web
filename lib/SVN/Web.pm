@@ -45,7 +45,6 @@ See
 L<http://jc.ngo.org.uk/~nik/cgi-bin/svnweb/index.cgi/jc/browse/nik/CPAN/SVN-Web/trunk/>
 for the SVN::Web source code, browsed using SVN::Web.
 
-
 =head1 DESCRIPTION
 
 SVN::Web provides a web interface to subversion repositories. You can
@@ -104,17 +103,25 @@ The default templates are installed in F<templates/trac>.  These implement
 a look and feel similar to the Trac (L<http://www.edgewall.com/trac/>)
 output.
 
-To change to another set, use the C<templatedir> configuration directive.
+To change to another set, use the C<templatedirs> configuration directive.
 
 For example, to use a set of templates that implement a much plainer look
 and feel:
 
-  templatedir: 'template/plain'
+  templatedirs:
+    - 'template/plain'
 
 Alternatively, if you have your own templates elsewhere you can
 specify a full path to the templates.
 
-  templatedir: '/full/path/to/template/directory'
+  templatedirs:
+    - '/full/path/to/template/directory'
+
+You can specify more than one directory in this list, and templates
+will be searched for in each directory in turn.  This makes it possible for
+actions that are not part of the core SVN::Web to ship their own templates.
+The documentation for these actions should explain how to adjust
+C<templatedirs> so their templates are found.
 
 For more information about writing your own templates see
 L</"ACTIONS, SUBCLASSES, AND URLS">.
@@ -207,7 +214,7 @@ if you have a web-based issue tracking system, you might write a plugin
 that recognises text of the form C<t#1234> and turns it in to a link to
 ticket #1234 in your ticketing system.
 
-=head2 Actions and action classes
+=head2 Actions, action classes, and action options
 
 Each action that SVN::Web can carry out is implemented as a class (see
 L</"ACTIONS, SUBCLASSES, AND URLS"> for more).  You can specify your own
@@ -247,6 +254,23 @@ Subversion C<annotate> command.  If you implement this, you would write:
 Please feel free to submit any classes that implement additional
 functionality back to the maintainers, so that they can be included in
 the distribution.
+
+Actions may have configurable options specified in F<config.yaml> under
+the C<opts> key.  Continuing the C<annotate> example, the action may be
+written to provide basic output by default, but feature a C<verbose>
+flag that you can enable globally.  That would be configured like so:
+
+  actions:
+    ...
+    annotate:
+      class: My::Class::That::Implements::Annotate
+      opts:
+        verbose: 1
+    ...
+
+The documentation for each action should explain in more detail how it
+should be configured.  See L<SVN::Web::action> for more information 
+about writing actions.
 
 If an action is listed in C<actions> and there is no corresponding
 C<class> directive then SVN::Web takes the action name, converts the
@@ -368,6 +392,28 @@ sub load_config {
     return $config ||= YAML::LoadFile ($file);
 }
 
+sub check_config {
+
+    # Deal with possibly conflicting 'templatedir' and 'templatedirs' settings.
+
+    # If neither of them are set, use 'templatedirs'
+    if(! exists $config->{templatedir} and ! exists $config->{templatedirs}) {
+	$config->{templatedirs} = [ 'template/trac' ];
+    }
+
+    # If 'templatedir' is the only one set, use it.
+    if(exists $config->{templatedir} and ! exists $config->{templatedirs}) {
+	$config->{templatedirs} = [ $config->{templatedir} ];
+	delete $config->{templatedir};
+    }
+
+    # If they're both set then throw an error
+    if(exists $config->{templatedir} and exists $config->{templatedirs}) {
+	SVN::Web::X->throw(error => '(templatedir and templatedirs defined)',
+			   vars  => []);
+    }
+}
+
 sub set_config {
     $config = shift;
 }
@@ -471,9 +517,19 @@ sub run {
 	@{$cfg->{navpaths}} = File::Spec::Unix->splitdir ($cfg->{path});
 	shift @{$cfg->{navpaths}};
 	# should use attribute or things alike
-	$obj = get_handler ({%$cfg});
+	$obj = get_handler ({%$cfg,
+       			     opts => exists $config->{actions}{$cfg->{action}}{opts} ?
+			                    $config->{actions}{$cfg->{action}}{opts} :
+			                    { },
+			     opts => $config->{actions}{$cfg->{actions}}{opts},
+			    });
     } else {
-	$obj = get_handler ({%$cfg, action => 'list'});
+	$cfg->{action} = 'list';
+	$obj = get_handler ({%$cfg,
+       			     opts => exists $config->{actions}{$cfg->{action}}{opts} ?
+			                    $config->{actions}{$cfg->{action}}{opts} :
+			                    { },
+			    });
     }
 
     loc_lang($cfg->{lang} ? $cfg->{lang} : ());
@@ -484,6 +540,8 @@ sub run {
 
 sub cgi_output {
     my ($cfg, $html) = @_;
+
+    return unless defined $html;
 
     if (ref ($html)) {
 	print $cfg->{cgi}->header(-charset => $html->{charset} || 'UTF-8',
@@ -537,7 +595,7 @@ sub mod_perl_output {
 our $pool; # global pool for holding opened repos
 
 sub get_template {
-    Template->new ({ INCLUDE_PATH => ($config->{templatedir} || 'template/trac/'),
+    Template->new ({ INCLUDE_PATH => $config->{templatedirs},
 		     PRE_PROCESS => 'header',
 		     POST_PROCESS => 'footer',
 		     FILTERS => { l => ([\&loc_filter, 1]),
@@ -572,6 +630,8 @@ sub run_cgi {
 		     style => $config->{style},
 		     cgi => $cgi,
 		   };
+	
+	    check_config();
 	
 	    SVN::Web::X->throw(error => '(action %1 not supported)',
 			       vars => [$action])
@@ -682,8 +742,12 @@ sub handler {
 		 request => $r,
 		 style => $config->{style},
 		 cgi => ref($r) eq 'Apache::Request' ? $r : CGI->new(),
+		 opts => exists $config->{actions}{$action}{opts} ?
+		                $config->{actions}{$action}{opts} :
+       		                { },
 	       };
 
+	check_config();
 	SVN::Web::X->throw(error => '(action %1 not supported)',
 			   vars => [$action])
 	    unless exists $config->{actions}{lc($action)};
