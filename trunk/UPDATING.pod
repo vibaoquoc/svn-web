@@ -39,6 +39,12 @@ appears in F<config.yaml>.
     view:
       class: SVN::Web::View
 
+=item
+
+There have been several changes to the F<trac> templates.  If you have made
+any local modifications then you will need to merge your changes in to the
+new templates.
+
 =back
 
 =head2 0.40 to 0.41
