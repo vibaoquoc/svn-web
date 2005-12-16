@@ -1,6 +1,6 @@
 [% USE cgi = CGI %]
 
-<div class="title">(<a href="[% script %]/[% repos %]/rss[% path %]">[%|l%]RSS[%END%]</a>)</div>
+<p>[% IF ! isdir %]<a href="[% script %]/[% repos %]/checkout[% path %][% revstr %]">[%|l%](checkout)[%END%]</a> | [% END %]<a href="[% script %]/[% repos %]/rss[% path %]">[%|l%](rss)[%END%]</a></p>
 
 <div class="title"><form action="[% cgi.self_url %]" method="get">
   [%|l%](show last)[%END%] <input name="limit" size=4 value="[% limit %]" /> [%|l%](changes)[%END%]</form>
