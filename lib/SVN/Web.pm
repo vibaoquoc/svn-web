@@ -1,7 +1,7 @@
 # -*- Mode: cperl; cperl-indent-level: 4 -*-
 package SVN::Web;
 use strict;
-our $VERSION = '0.41';
+our $VERSION = '0.42';
 use SVN::Core;
 use SVN::Repos;
 use YAML ();
