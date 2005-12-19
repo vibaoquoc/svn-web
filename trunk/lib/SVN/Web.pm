@@ -372,12 +372,18 @@ You can enable mod_perl support of SVN::Web with the following in the
 apache configuration:
 
     Alias /svnweb /path/to/svnweb
-    <Directory /path/to/svnweb/>
+    <Directory /path/to/svnweb>
       AllowOverride None
       Options None
       SetHandler perl-script
       PerlHandler SVN::Web
     </Directory>
+
+    <Directory /path/to/svnweb/css>
+      SetHandler default-handler
+    </Directory>
+
+F</path/to/svnweb> is the directory in which you ran C<svnweb-install>.
 
 =cut
 
