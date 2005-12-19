@@ -6,7 +6,6 @@ use SVN::Core;
 use SVN::Repos;
 use YAML ();
 use Template;
-use URI;
 use File::Spec::Unix;
 use SVN::Web::X;
 eval 'use FindBin';
@@ -616,7 +615,7 @@ sub run_cgi {
 	    $action ||= 'browse';
 	    $path ||= '';
 
-	    my $base_uri = URI->new($cgi->url())->as_string();
+	    my $base_uri = $ENV{SCRIPT_NAME};
 	    $base_uri =~ s{/index.cgi}{};
 
 	    $cfg = { repos => $repos,
@@ -735,6 +734,7 @@ sub handler {
 		 script => $script,
 		 path => "/$path",
 		 request => $r,
+		 base_uri => $script,
 		 style => $config->{style},
 		 cgi => ref($r) eq 'Apache::Request' ? $r : CGI->new(),
 		 opts => exists $config->{actions}{$action}{opts} ?
