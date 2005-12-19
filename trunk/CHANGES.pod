@@ -8,7 +8,7 @@ Changes between SVN::Web versions.
 
 =head1 DESCRIPTION
 
-=head2 0.42
+=head2 0.42, released Dec 16, 2005
 
 =over
 
@@ -32,7 +32,7 @@ also allows for easy configuration of per-action options.
 
 =item
 
-A (partial) French localisation has been suppled by Cyril Brulebois.
+A (partial) French localisation has been supplied by Cyril Brulebois.
 
 =item
 
