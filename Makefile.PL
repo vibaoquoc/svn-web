@@ -19,7 +19,7 @@ requires(
 	'Template::Plugin::Number::Format' => '0',
 	'Locale::Maketext::Lexicon' => 0,
 	'Locale::Maketext::Simple' => 0,
-	'Exception::Class' => 0,
+	'Exception::Class' => 1.22,
 	'List::Util' => 0);
 
 recommends(
