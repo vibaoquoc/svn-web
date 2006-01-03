@@ -125,6 +125,29 @@ C<templatedirs> so their templates are found.
 For more information about writing your own templates see
 L</"ACTIONS, SUBCLASSES, AND URLS">.
 
+=head2 Template cache
+
+Template Toolkit can cache the results of template processing to make
+future processing faster.
+
+By default the cache is not enabled it.  Use C<tt_compile_dir> to enable it.
+Set this directive to the name of a directory where the UID that SVN::Web is
+being run as can create files.
+
+For example:
+
+   tt_compile_dir: /var/tmp/tt-cache
+
+A literal C<.> and the UID of the process running SVN::Web will be appended
+to this string to generate the final directory name.  For example, if
+SVN::Web is being run under UID 80 then the final directory name is
+F</var/tmp/tt-cache.80>.  Since the cached templates are always created
+with mode 0600 this ensures that different users running SVN::Web can not
+overwrite one another's cached templates.
+
+This directive has no default value.  If it is not defined then no caching
+will take place.
+
 =head2 Log message filters
 
 Many of the templates shipped with SVN::Web include log messages from
@@ -414,6 +437,17 @@ sub load_config {
         die "templatedir and templatedirs both defined in config.yaml";
     }
 
+    # Handle tt_compile_dir.  If it doesn't exist then set it to undef.
+    # If it does exist, and is defined, append a '.' and the current
+    # real UID, to help ensure uniqueness.
+    if(! exists $config->{tt_compile_dir}) {
+	$config->{tt_compile_dir} = undef; # undef == no compiling
+    } else {
+	if(defined $config->{tt_compile_dir}) {
+	    $config->{tt_compile_dir} .= '.' . $<;
+	}
+    }
+
     return;
 }
 
@@ -600,6 +634,7 @@ sub get_template {
     Template->new ({ INCLUDE_PATH => $config->{templatedirs},
 		     PRE_PROCESS => 'header',
 		     POST_PROCESS => 'footer',
+		     COMPILE_DIR => $config->{tt_compile_dir},
 		     FILTERS => { l => ([\&loc_filter, 1]),
 				  log_msg => \&log_msg_filter, } });
 }
