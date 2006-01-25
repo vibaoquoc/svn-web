@@ -15,7 +15,27 @@ Please manually install SVN::Core by compiling Subversion
 and try this installation process again.
 .
 
-Module::Build->new(
+my $class = Module::Build->subclass(code => <<'EOCODE');
+    sub ACTION_build {
+        my $self = shift;
+	my $rc   = $self->SUPER::ACTION_build(@_);
+
+	warn "Copying additional files\n";
+
+	open(MAN, 'MANIFEST') or die 'Could not open MANIFEST';
+	my @files = map { chomp; $_ } 
+          grep { $_ =~ m{^lib/SVN/Web/(Style|Template|I18N)} } <MAN>;
+        close(MAN);
+
+        $self->copy_if_modified(from => $_, 
+                                to   => File::Spec->catfile($self->blib(), $_))
+          for map { $self->localize_file_path($_) } @files;
+
+	return $rc;
+    }
+EOCODE
+
+$class->new(
     dist_name          => 'SVN-Web',
     dist_author        => 'Nik Clayton <nik@FreeBSD.org>',
     license            => 'perl',
