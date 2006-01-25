@@ -16,9 +16,9 @@ and try this installation process again.
 .
 
 my $class = Module::Build->subclass(code => <<'EOCODE');
-    sub ACTION_build {
+    sub ACTION_code {
         my $self = shift;
-	my $rc   = $self->SUPER::ACTION_build(@_);
+	my $rc   = $self->SUPER::ACTION_code(@_);
 
 	warn "Copying additional files\n";
 
@@ -58,5 +58,5 @@ $class->new(
 	                    'Template::Plugin::Clickable::Email' => 0,
 	                    'Template::Plugin::Subst'            => 0,
 	                    'HTTP::Server::Simple'               => 0, },
-    add_to_cleanup     => [ qw't/repos$' ],
+    add_to_cleanup     => [ qw't/repos*' ],
 )->create_build_script();
