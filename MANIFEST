@@ -1,4 +1,5 @@
 bin/svnweb-install
+bin/svnweb-server
 CHANGES.pod
 CONTRIBUTING.pod
 inc/ExtUtils/AutoInstall.pm
@@ -68,6 +69,7 @@ README
 SIGNATURE
 t/1use.t
 t/2basic.t
+t/3svnweb-install.t
 t/test_repo.dump
 TODO
 UPDATING.pod
