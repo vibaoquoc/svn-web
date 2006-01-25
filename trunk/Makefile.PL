@@ -6,7 +6,7 @@ use inc::Module::Install;
 name		('SVN-Web');
 author		('Nik Clayton <nik@FreeBSD.org>');
 abstract	('Subversion repository web frontend');
-install_script  ('bin/svnweb-install');
+install_script  ('bin/svnweb-install', 'bin/svnweb-server');
 license		('perl');
 version_from	('lib/SVN/Web.pm');
 clean_files	(qw't/repos*');
@@ -26,6 +26,7 @@ recommends(
 	'Template::Plugin::Clickable' => 0,
 	'Template::Plugin::Clickable::Email' => 0,
 	'Template::Plugin::Subst' => 0,
+	'HTTP::Server::Simple' => 0,
 	);
 
 include('ExtUtils::AutoInstall');
