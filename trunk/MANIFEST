@@ -63,6 +63,7 @@ lib/SVN/Web/Test.pm
 lib/SVN/Web/View.pm
 lib/SVN/Web/X.pm
 Makefile.PL
+Build.PL
 MANIFEST			This list of files
 META.yml
 README
