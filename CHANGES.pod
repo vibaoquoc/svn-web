@@ -8,6 +8,18 @@ Changes between SVN::Web versions.
 
 =head1 DESCRIPTION
 
+=head2 0.44
+
+=over
+
+=item
+
+Included support for running under mod_perl2 as well as mod_perl1.  Fixes
+rt#17085 and rt#17350.  Based on a patch from Garrison Hoffman
+<garrison@codefix.net>.
+
+=back
+
 =head2 0.43, released Jan 25, 2006
 
 =over
