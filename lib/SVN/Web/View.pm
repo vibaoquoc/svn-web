@@ -1,8 +1,8 @@
+# -*- Mode: cperl; cperl-indent-level: 4 -*-
 package SVN::Web::View;
 use strict;
 use SVN::Core;
-use SVN::Repos;
-use SVN::Fs;
+use SVN::Ra;
 
 =head1 NAME
 
@@ -93,20 +93,16 @@ sub new {
 
 sub _log {
     my ($self, $paths, $rev, $author, $date, $msg, $pool) = @_;
-#    my ($self, $rev, $root, $paths, $props) = @_;
     return unless $rev > 0;
-#    my ($author, $date, $message) = @{$props}{qw/svn:author svn:date svn:log/};
 
     my $data = { rev => $rev, author => $author,
 		 date => $date, msg => $msg };
 
-    my $root = $self->{repos}->fs()->revision_root($rev);
-
-    $data->{paths} = 
+    $data->{paths} =
       { map { $_ => { action => $paths->{$_}->action(),
 		      copyfrom => $paths->{$_}->copyfrom_path(),
 		      copyfromrev => $paths->{$_}->copyfrom_rev(),
-		      isdir => $root->check_path($_) == $SVN::Node::dir,
+		      isdir => $self->{repos}->check_path($_, $rev) == $SVN::Node::dir,
 		    }} keys %$paths};
 
     return $data;
@@ -115,15 +111,13 @@ sub _log {
 sub run {
     my $self = shift;
     my $pool = SVN::Pool->new_default_sub;
-    my $fs = $self->{repos}->fs;
-    my $rev = $self->{cgi}->param('rev') || $fs->youngest_rev;
-    my $root = $fs->revision_root($rev);
+    my $rev = $self->{cgi}->param('rev')
+      || $self->{repos}->get_latest_revnum();
 
-    # Start at $rev, and look backwards for the first interesting
-    # revision number for this file.
-    my $hist = $root->node_history($self->{path});
-    $hist = $hist->prev(0);
-    $rev = ($hist->location())[1];
+    # Get a dirent for the most recent interesting revision of this file
+    # that's $rev or older
+    my $dirent = $self->{repos}->stat($self->{path}, $rev);
+    $rev = $dirent->created_rev();
 
     # If no rev param was passed in, then $rev is also the file's youngest
     # rev.  Which means we're at the file's head.  Otherwise, use the fs'
@@ -132,23 +126,28 @@ sub run {
     if(! defined $self->{cgi}->param('rev')) {
       $youngest_rev = $rev;
     } else {
-      $youngest_rev = $fs->youngest_rev();
+      $youngest_rev = $self->{repos}->get_latest_revnum();
     }
 
     # Get the log for this revision of the file
-    $self->{repos}->get_logs([$self->{path}], $rev - 1, $rev, 1, 0,
+    $self->{repos}->get_log([$self->{path}], $rev - 1, $rev, 1, 0, 0,
                              sub { $self->{REV} = $self->_log(@_)});
 
     # Get the text for this revision of the file
-    $root = $fs->revision_root($rev);
-    my $file = $root->file_contents($self->{path});
+    my $file = undef;
+    my $stream;
+    open($stream, '>', \$file);
+    $self->{repos}->get_file($self->{path}, $dirent->created_rev(), $stream);
+    close($stream);
+
     local $/;
     return {template => 'view',
 	    data => { rev => $rev,
 		      youngest_rev => $youngest_rev,
-		      mimetype => $root->node_prop($self->{path},
-						   'svn:mime-type') || 'text/plain',
-		      file => <$file>,
+#		      mimetype => $root->node_prop($self->{path},
+#						   'svn:mime-type') || 'text/plain',
+		      mimetype => 'text/plain',
+		      file => $file,
 		      %{$self->{REV}},
 		    }};
 }
