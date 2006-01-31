@@ -3,7 +3,7 @@ package SVN::Web;
 use strict;
 our $VERSION = '0.43';
 use SVN::Core;
-use SVN::Repos;
+use SVN::Ra;
 use YAML ();
 use Template;
 use File::Spec::Unix;
@@ -588,24 +588,28 @@ sub get_repos {
 		       vars => [])
 	unless $config->{repos} || $config->{reposparent};
 
-    my $repo_path = 
+    my $repo_url =
       $config->{reposparent} ? "$config->{reposparent}/$repos"
 	: $config->{repos}{$repos};
 
     SVN::Web::X->throw(error => '(no such repo %1 %2)',
-		       vars => [$repos, $repo_path])
+		       vars => [$repos, $repo_url])
 	unless ($config->{reposparent} &&
 		-d "$config->{reposparent}/$repos")
 	    || exists $config->{repos}{$repos} && -d $config->{repos}{$repos};
 
+    $repo_url = "file://$repo_url"
+      unless $repo_url =~ m{(?:http|https|svn|file|svn\+ssh)://};
+
     eval {
-	$REPOS{$repos} ||= SVN::Repos::open($repo_path, $repospool);
+	$REPOS{$repos} ||= SVN::Ra->new(url  => $repo_url,
+					pool => $repospool);
     };
 
     if($@) {
 	my $e = $@;
-	SVN::Web::X->throw(error => '(SVN::Repos::open failed: %1 %2)',
-			   vars => [$repo_path, $e]);
+	SVN::Web::X->throw(error => '(SVN::Ra->new() failed: %1 %2)',
+			   vars => [$repo_url, $e]);
     }
 
     if ( $config->{block} ) {
