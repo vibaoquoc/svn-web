@@ -1,3 +1,4 @@
+# -*- Mode: cperl; cperl-indent-level: 4 -*-
 package SVN::Web::Browse;
 use strict;
 use SVN::Core;
@@ -113,8 +114,7 @@ sub new {
 
 sub run {
     my $self = shift;
-    my $fs = $self->{repos}->fs;
-    my $rev = $self->{cgi}->param('rev') || $fs->youngest_rev;
+    my $rev = $self->{cgi}->param('rev') || $self->{repos}->get_latest_revnum();
 
     if ($self->{path} !~ m|/$|) {
         print $self->{cgi}->redirect(-uri => $self->{cgi}->self_url() . '/');
@@ -122,8 +122,7 @@ sub run {
     }
     my $path = $self->{path};
     $path =~ s|/$|| unless $path eq '/';
-    my $root = $fs->revision_root ($rev);
-    my $kind = $root->check_path ($path);
+    my $kind = $self->{repos}->check_path($path, $rev);
 
     if($kind == $SVN::Node::none) {
       SVN::Web::X->throw(error => '(path %1 does not exist in revision %2)',
@@ -132,48 +131,51 @@ sub run {
 
     die "not a directory in browse" unless $kind == $SVN::Node::dir;
 
-    my $entries = [ map {{ name => $_->name,
-			   kind => $_->kind,
-			   isdir => ($_->kind == $SVN::Node::dir),
-		       }} values %{$root->dir_entries ($self->{path})}];
+    my @results = $self->{repos}->get_dir($path, $rev);
+    my %dirents = %{$results[0]};
+    my %props   = %{$results[2]};
 
+    my $entries = [];
+    foreach my $ent (keys %dirents) {
+	my %h = ();
+	$h{name} = $ent;
 
-    my $spool = SVN::Pool->new_default;
-    for (@$entries) {
-	my $path = "$self->{path}$_->{name}";
-	$_->{rev} = ($fs->revision_root ($rev)->node_history
-		     ($path)->prev(0)->location)[1];
-	$_->{size} = $_->{isdir} ? '' :
-	    $root->file_length ($path);
-	$_->{type} = $root->node_prop ($self->{path}.$_->{name},
-				       'svn:mime-type') unless $_->{isdir};
-	$_->{type} =~ s|/\w+|| if $_->{type};
+	$h{kind}   = $dirents{$ent}->kind();
+	$h{isdir}  = $dirents{$ent}->kind() == $SVN::Node::dir;
+	$h{rev}    = $dirents{$ent}->created_rev();
+	$h{size}   = $dirents{$ent}->size();
+	$h{props}  = $dirents{$ent}->has_props();
+	$h{author} = $dirents{$ent}->last_author();
+	$h{date_modified} = $self->{repos}->rev_prop($h{rev}, 'svn:date');
+	$h{msg} = $self->{repos}->rev_prop($h{rev}, 'svn:log');
 
-	$_->{author} = $fs->revision_prop($_->{rev}, 'svn:author');
-	$_->{date_modified} = $fs->revision_prop($_->{rev}, 'svn:date');
-	$_->{msg} = $fs->revision_prop($_->{rev}, 'svn:log');
-
-	$spool->clear;
+	push @$entries, \%h;
     }
+
+#    my $spool = SVN::Pool->new_default;
+#    for (@$entries) {
+#	my $path = "$self->{path}$_->{name}";
+#	$_->{type} = $root->node_prop ($self->{path}.$_->{name},
+#				       'svn:mime-type') unless $_->{isdir};
+#	$_->{type} =~ s|/\w+|| if $_->{type};
+#	$spool->clear;
+#    }
 
     # TODO: custom sorting
     @$entries = sort {($b->{isdir} <=> $a->{isdir}) || ($a->{name} cmp $b->{name})} @$entries;
 
     my @props = ();
     foreach my $prop_name (qw(svn:externals)) {
-      my $prop_value = $root->node_prop($path, $prop_name);
-      if(defined $prop_value) {
-	$prop_value =~ s/\s*\n$//ms;
-	push @props, { name  => $prop_name,
-		       value => $prop_value,
-		       };
-      }
+	if(exists $props{$prop_name}) {
+	    push @props, { name => $prop_name,
+			   value => $props{$prop_name} };
+	}
     }
 
     return { template => 'browse',
 	     data => { entries => $entries,
 		       rev => $rev,
-		       youngest_rev => $fs->youngest_rev(),
+		       youngest_rev => $self->{repos}->get_latest_revnum(),
 		       props => \@props,
 		     }};
 }
