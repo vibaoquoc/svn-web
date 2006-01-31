@@ -3,7 +3,6 @@ package SVN::Web::Browse;
 use strict;
 use SVN::Core;
 use SVN::Repos;
-use SVN::Fs;
 use SVN::Web::X;
 
 =head1 NAME
