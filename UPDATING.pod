@@ -32,17 +32,6 @@ the changes by hand if you are using your own template.
 The diff for this change is at
 L<http://jc.ngo.org.uk/svnweb/jc/revision?rev=721>.
 
-=item
-
-The templates F<trac/trac.css> and F<trac/code.css> have been changed
-to remove references to images that are not shipped in this distribution.
-This will stop web browsers requesting them, and keeps C<svnweb-server>
-quiet.  It's not essential that you update your copies accordingly, but
-it doesn't hurt either.
-
-The diff for this change is at
-L<http://jc.ngo.org.uk/svnweb/jc/revision?rev=764>.
-
 =back
 
 =head2 0.41 to 0.42
