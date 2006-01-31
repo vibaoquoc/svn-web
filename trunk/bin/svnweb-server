@@ -11,7 +11,7 @@ use Getopt::Long;
 
 =head1 NAME
 
-  svnweb-server - simple webserver for SVN::Web
+svnweb-server - simple webserver for SVN::Web
 
 =head1 SYNOPSIS
 
@@ -52,9 +52,9 @@ Net::Server::Fork>.
 
 =cut
 
-my %options = ('root=s' => '.',
-	       'port=i' => '8080',
-	       'net-server=s' => undef);
+my %options = ('root'        => '.',
+	       'port'        => '8080',
+	       'net-servers' => undef);
 
 GetOptions('root=s'   => \$options{root},
 	   'port=i'   => \$options{port},
