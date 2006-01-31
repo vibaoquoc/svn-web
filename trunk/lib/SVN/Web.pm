@@ -507,10 +507,10 @@ With that configuration the full path to browse the repository would be:
 
   http://server/svnweb/index.cgi
 
-=head2 Apache with mod_perl
+=head2 Apache with mod_perl or mod_perl2
 
-You can enable mod_perl support of SVN::Web with the following in the
-apache configuration:
+You can use mod_perl or mod_perl2 with SVN::Web.  The following Apache
+configuration is suitable.
 
     <Directory /path/to/svnweb>
       AllowOverride None
@@ -860,15 +860,29 @@ sub log_msg_filter {
 }
 
 sub handler {
-    eval "
-	use Apache::RequestRec ();
-	use Apache::RequestUtil ();
-	use Apache::RequestIO ();
-	use Apache::Response ();
-	use Apache::Const;
-	use Apache::Constants;
-        use Apache::Request;
-    ";
+    my $ok;
+    eval {
+        use mod_perl;
+        if($mod_perl::VERSION >= 1.99) {
+            require Apache2::RequestRec;
+            require Apache2::RequestUtil;
+            require Apache2::RequestIO;
+            require Apache2::Response;
+            require Apache2::Request;
+            require Apache2::Const;
+            Apache2::Const->import(-compile => qw(OK DECLINED));
+            $ok = &Apache2::Const::OK;
+        } else {
+            require Apache::RequestRec;
+            require Apache::RequestUtil;
+            require Apache::RequestIO;
+            require Apache::Response;
+            require Apache::Request;
+            require Apache::Constants;
+            Apache::Constants->import(-compile => qw(OK DECLINED));
+            $ok = &Apache::Constants::OK;
+        }
+    };
 
     my $r = shift;
     eval "$r = Apache::Request->new($r)";
@@ -921,7 +935,7 @@ sub handler {
     }
 
     mod_perl_output($cfg, $html);
-    return &Apache::OK;
+    return $ok;
 }
 
 =head1 SEE ALSO
