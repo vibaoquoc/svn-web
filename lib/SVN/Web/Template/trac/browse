@@ -51,15 +51,10 @@
     [% ELSE %]
       [% quant_age = age / loop.prev | round(0) %]
     [% END %]
-    [% inflected_quantum = quanta.$quantum %]
-    [% IF quant_age < 1 || quant_age >= 2 %]
-      [% inflected_quantum = "${inflected_quantum}s" %]
-    [% END %]
-    [% quant_age %] [% inflected_quantum %]
+    [%|l(quant_age)%](%1 [% quanta.$quantum %])[%END%]
     [% LAST %]
   [% END %]
-[% END %]
-</td>
+[% END %]</td>
       <td class="change"><span class="author">[% author %]:</span> <span class="change">[% msg | truncate(100) | html %]</span></td>
     </tr>
   [% END %]
