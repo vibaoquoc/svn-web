@@ -5,6 +5,8 @@ use SVN::Repos;
 use SVN::Fs;
 use SVN::Web::X;
 
+use Time::Local;
+
 =head1 NAME
 
 SVN::Web::Browse - SVN::Web action to browse a Subversion repository
@@ -151,6 +153,10 @@ sub run {
 
 	$_->{author} = $fs->revision_prop($_->{rev}, 'svn:author');
 	$_->{date_modified} = $fs->revision_prop($_->{rev}, 'svn:date');
+	my($y, $m, $d, $h, $M, $s)
+	  = $_->{date_modified} =~ /^(....)-(..)-(..)T(..):(..):(..)/;
+	my $time = timegm($s, $M, $h, $d, $m - 1, $y);
+	$_->{age} = time() - $time;
 	$_->{msg} = $fs->revision_prop($_->{rev}, 'svn:log');
 
 	$spool->clear;
