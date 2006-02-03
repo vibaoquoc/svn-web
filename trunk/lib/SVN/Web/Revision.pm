@@ -164,9 +164,11 @@ sub _log {
 				  }} keys %$paths};
     my $root = $self->{repos}->fs->revision_root ($rev);
     my $oldroot = $self->{repos}->fs->revision_root ($rev-1);
+    my $subpool = SVN::Pool->new($pool);
     for (keys %{$data->{paths}}) {
 	$data->{paths}{$_}{isdir} = 1
-	    if $data->{paths}{$_}{action} eq 'D' ? $oldroot->is_dir ($_) : $root->is_dir ($_);
+	    if $data->{paths}{$_}{action} eq 'D' ? $oldroot->is_dir ($_, $subpool) : $root->is_dir ($_, $subpool);
+	$subpool->clear();
     }
     return $data;
 }

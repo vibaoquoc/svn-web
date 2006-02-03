@@ -14,6 +14,12 @@ Changes between SVN::Web versions.
 
 =item
 
+The C<revision>, C<log>, and C<rss> actions are much more conservative
+with memory when processing commits that changed a large number of files.
+Fixes rt#17359.
+
+=item
+
 Included support for running under mod_perl2 as well as mod_perl1.  Fixes
 rt#17085 and rt#17350.  Based on a patch from Garrison Hoffman
 <garrison@codefix.net>.
