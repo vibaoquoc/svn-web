@@ -14,9 +14,10 @@ Changes between SVN::Web versions.
 
 =item
 
-The C<revision>, C<log>, and C<rss> actions are much more conservative
-with memory when processing commits that changed a large number of files.
-Fixes rt#17359.
+The C<revision>, C<log>, C<view>, and C<rss> actions are much more 
+conservative with memory when processing commits that changed a large 
+number of files.  Fixes rt#17359, reported by Dietrich Streifert
+<dietrich.streifert@visionet.de>.
 
 =item
 
