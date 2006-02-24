@@ -695,6 +695,7 @@ sub run {
     loc_lang($cfg->{lang} ? $cfg->{lang} : ());
     $html = $obj->run();
 
+    $pool->clear;
     return $html;
 }
 
@@ -733,6 +734,8 @@ sub mod_perl_output {
         $content_type .= $html->{charset} || 'UTF-8';
 	$cfg->{request}->content_type($content_type);
 
+	$cfg->{request}->send_http_header();
+
 	if ($html->{template}) {
 	    $template ||= get_template ();
 	    $template->process ($html->{template},
@@ -748,6 +751,7 @@ sub mod_perl_output {
     else {
 	$cfg->{request}->content_type('text/html; charset=UTF-8');
 
+	$cfg->{request}->send_http_header();
 	$cfg->{request}->print($html);
     }
 }
