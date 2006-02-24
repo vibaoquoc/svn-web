@@ -31,6 +31,12 @@ Included support for running under mod_perl2 as well as mod_perl1.  Fixes
 rt#17085 and rt#17350.  Based on a patch from Garrison Hoffman
 <garrison@codefix.net>.
 
+=item
+
+Fixed a bug when running under mod_perl -- the HTTP headers were not
+being sent.  Some browsers could cope with this, others just displayed
+the raw HTML.  Reported by Dominic Mitchell <dom@happygiraffe.net>.
+
 =back
 
 =head2 0.43, released Jan 25, 2006
