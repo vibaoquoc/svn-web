@@ -1,0 +1,119 @@
+#!/usr/bin/perl
+use strict;
+use Config;
+use File::Copy;
+use File::Basename;
+use File::Find;
+
+BEGIN {
+    # This is a nasty hack.  SVN::Core has a bug.  "perl -MSVN::Core -c -e 1"
+    # will dump core.  Something to do with the interaction between "-c"
+    # running BEGIN blocks but not running END blocks, or similar.
+    #
+    # Anyway, we want to test to make sure this script compiles cleanly.
+    # And we want to use SVN::Web.  Since the two are mutually exclusive,
+    # only use SVN::Web (and hence SVN::Core) if we're not compiling.
+    if(! $^C) {
+        require SVN::Web;
+    }
+}
+
+die "already have config.yaml" if -e 'config.yaml';
+
+open my $fh, ">config.yaml";
+
+my %targets = (
+    Template => 'template',
+    I18N     => 'po',
+    Style    => 'css',
+);
+
+while (my ($from, $to) = each %targets) {
+    my $path = $INC{'SVN/Web.pm'};
+    $path =~ s{.pm$}{/$from}i or next;
+
+    find({ wanted => sub { 
+      my $dst_path = $File::Find::name;
+      $dst_path =~ s/$path/$to/;
+
+      if(-d $File::Find::name) {
+          mkdir $dst_path or
+	    warn "mkdir($dst_path) failed: $!\n";
+      } else {
+          copy($File::Find::name, $dst_path) or
+	    warn "Copying $File::Find::name -> $dst_path failed:\n$!\n";
+      }
+    }, no_chdir => 1 }, $path);
+}
+
+print $fh <<END;
+# Actions, and the classes that implement them.
+actions:
+  browse:
+    class: SVN::Web::Browse
+  checkout:
+    class: SVN::Web::Checkout
+  diff:
+    class: SVN::Web::Diff
+  list:
+    class: SVN::Web::List
+  log:
+    class: SVN::Web::Log
+  revision:
+    class: SVN::Web::Revision
+  rss:
+    class: SVN::Web::RSS
+  view:
+    class: SVN::Web::View
+
+# Suggested minimum filters to run log messages through.  Note that
+# it is not fatal if one of these filters is not installed.
+log_msg_filters:
+  - name: standard
+    filter: html
+  - name: standard
+    filter: html_line_break
+  - name: Clickable
+    filter: clickable
+  - name: Clickable::Email
+    filter: filter
+
+# set your repository path below:
+#
+#repos:
+#  test: '/tmp/svnweb-test'
+#  test2: '/tmp/svnweb-test2'
+#
+# or a parent path contains repositories
+#
+#reposparent: '/path/to/repositories'
+#
+# if you set a parent you can block specific repositories
+# like this:
+#
+#block:
+#  - 'blocked1'
+#  - 'blocked2'
+#
+
+END
+
+close $fh;
+
+open $fh, '>index.cgi';
+print $fh <<"END";
+$Config::Config{startperl} -w
+#use lib '.';
+#use lib '../lib';
+use CGI::Carp qw(fatalsToBrowser);
+use SVN::Web;
+SVN::Web::run_cgi();
+END
+
+close $fh;
+
+chmod 0755,'index.cgi';
+
+# XXX: export the template too
+
+print "SVN::Web now installed! please see config.yaml\n";
