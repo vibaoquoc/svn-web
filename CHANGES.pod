@@ -14,6 +14,12 @@ Changes between SVN::Web versions.
 
 =item
 
+When browsing the repository the F<trac> templates now include age
+of the file, expressed as {seconds, minutes, hours, days, weeks,
+months, years} since the file was last modified.
+
+=item
+
 The C<revision>, C<log>, C<view>, and C<rss> actions are much more 
 conservative with memory when processing commits that changed a large 
 number of files.  Fixes rt#17359, reported by Dietrich Streifert
