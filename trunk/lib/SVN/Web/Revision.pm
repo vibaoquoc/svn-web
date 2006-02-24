@@ -218,6 +218,11 @@ sub make_diffs {
 	$kind = $root2->check_path($path);
 	next if $kind == $SVN::Node::none;
 
+	# Skip the diff if either of the files have a non-text MIME type
+	my $mt1 = $root1->node_prop($path, 'svn:mime-type') || 'text/plain';
+	my $mt2 = $root2->node_prop($path, 'svn:mime-type') || 'text/plain';
+	next if ($mt1 !~ m{^text/}) or ($mt2 !~ m{^text/});
+
 	$self->{REV}->{paths}{$path}{diff} = Text::Diff::diff
 	  ($root2->file_contents($path),
 	   $root1->file_contents($path),
@@ -236,6 +241,11 @@ sub make_diffs {
 
 	my $root1 = $fs->revision_root($rev);
 	my $root2 = $fs->revision_root($self->{REV}->{paths}{$path}{copyfromrev});
+
+	# Skip the diff if either of the files have a non-text MIME type
+	my $mt1 = $root1->node_prop($path, 'svn:mime-type') || 'text/plain';
+	my $mt2 = $root2->node_prop($path, 'svn:mime-type') || 'text/plain';
+	next if ($mt1 !~ m{^text/}) or ($mt2 !~ m{^text/});
 
 	# If the files have differing MD5s then do a diff
 	if($root1->file_md5_checksum($path) ne $root2->file_md5_checksum($src)) {
