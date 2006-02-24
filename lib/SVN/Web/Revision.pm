@@ -183,10 +183,14 @@ sub run {
       SVN::Web::X->throw(error => '(no revision)',
 			 vars => []);
 
+    my $fs           = $self->{repos}->fs();
+    my $youngest_rev = $fs->youngest_rev();
+
+    SVN::Web::X->throw(error => '(revision %1 does not exist)',
+		       vars => [$rev]) if $rev > $youngest_rev;
+
     $self->{repos}->get_logs (['/'], $rev, $rev, 1, 0,
 			      sub { $self->{REV} = $self->_log(@_)});
-
-    my $fs = $self->{repos}->fs();
 
     $self->make_diffs($rev) if $self->{opts}{show_diff};
 
