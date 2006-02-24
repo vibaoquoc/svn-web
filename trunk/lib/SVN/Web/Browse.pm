@@ -139,7 +139,6 @@ sub run {
 			   isdir => ($_->kind == $SVN::Node::dir),
 		       }} values %{$root->dir_entries ($self->{path})}];
 
-
     my $spool = SVN::Pool->new_default;
     for (@$entries) {
 	my $path = "$self->{path}$_->{name}";
