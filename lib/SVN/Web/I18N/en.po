@@ -289,3 +289,5 @@ msgstr "%quant(%1, week, weeks)"
 msgid "(%1 month)"
 msgstr "%quant(%1, month, months)"
 
+msgid "(%1 year)"
+msgstr "%quant(%1, year, years)"
