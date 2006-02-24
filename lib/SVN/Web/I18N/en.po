@@ -171,7 +171,7 @@ msgid "(no revision)"
 msgstr "You must provide a revision for this action to operate on."
 
 msgid "(revision %1 does not exist)"
-msgstr "Rrevision %1 does not exist in this repository.  Did you make "
+msgstr "Revision %1 does not exist in this repository.  Did you make "
 "a mistake entering the number?"
 
 msgid "(action %1 not supported)"
