@@ -866,7 +866,7 @@ sub log_msg_filter {
 sub handler {
     my $ok;
     eval {
-        use mod_perl;
+        require mod_perl;
         if($mod_perl::VERSION >= 1.99) {
             require Apache2::RequestRec;
             require Apache2::RequestUtil;
