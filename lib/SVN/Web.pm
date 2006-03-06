@@ -22,8 +22,6 @@ use Locale::Maketext::Simple (
 );
 }
 
-require CGI;
-
 =head1 NAME
 
 SVN::Web - Subversion repository web frontend
@@ -381,14 +379,13 @@ C<< SVN::Web::<Action> >> package.
 
 =head2 CGI class
 
-SVN::Web can use a custom CGI class.  By default SVN::Web will use CGI::Fast
-if it is installed, and fallback to using CGI otherwise.
+SVN::Web can use a custom CGI class.  By default SVN::Web will use
+L<CGI::Fast> if it is installed, and fallback to using L<CGI> otherwise.
 
-If you have your own CGI subclass you can specify it here.
+Of course, if you have your own class that implements the CGI interface
+you may specify it here too.
 
-   cgi_class: 'My::CGI::Subclass'
-
-This option is somewhat specialised.
+  cgi_class: 'My::CGI::Subclass'
 
 =head1 ACTIONS, SUBCLASSES, AND URLS
 
@@ -770,11 +767,51 @@ sub get_template {
 sub run_cgi {
     die $@ if $@;
     $pool ||= SVN::Pool->new_default;
-    load_config ('config.yaml');
+    load_config('config.yaml');
     $template ||= get_template ();
     $config->{diff_context} ||= 3;
 
-    my $cgi_class = $config->{cgi_class} || (eval { require CGI::Fast; 1 } ? 'CGI::Fast' : 'CGI');
+    # Pull in the configured CGI class.  Propogate any errors back, and
+    # call the correct import() routine.
+    #
+    # This is more complicated than it should be.  If $config->{cgi_class}
+    # is defined then use that.  If not, use CGI::Fast.  If that can't be
+    # loaded then use CGI.
+    #
+    # There's a problem with (at least) CGI::Fast.  It's possible for the
+    # require() to fail, but for CGI::Fast's entry in %INC to be populated.
+    # This seems to happen when CGI::Fast loads, but its dependency (such
+    # as FCGI) fails to load.  So if the require() fails for any reason
+    # we explicitly remove the %INC entry.
+
+    my $cgi_class;
+    my $eval_result;
+
+    if(exists $config->{cgi_class}) {
+	$eval_result = eval "require $config->{cgi_class}";
+	die $@ if $@;
+	$cgi_class = $config->{cgi_class};
+    } else {
+	foreach ('CGI::Fast', 'CGI') {
+	    $eval_result = eval "require $_";
+	    if($@) {
+		my $path = $_;
+		$path =~ s{::}{/}g;
+		$path .= '.pm';
+		delete $INC{$path};
+	    } else {
+		$cgi_class = $_;
+		last;
+	    }
+	}
+    }
+
+    die "Could not load a CGI class" unless $eval_result;
+    $cgi_class->import();
+
+    # Save the selected module so that future calls to this routine
+    # don't waste time trying to find the correct class.
+    $config->{cgi_class} = $cgi_class unless exists $config->{cgi_class};
 
     while (my $cgi = $cgi_class->new) {
 	my($html, $cfg);
