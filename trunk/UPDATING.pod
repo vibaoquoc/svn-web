@@ -14,9 +14,11 @@ Notes on updating from previous versions of SVN::Web
 
 =item
 
-The F<trac/log> template has been changed to not generate useful output
-in HTML comments.  Using the new F<trac/log> template (or merging the
-change in by hand) will speed up log browsing.
+The F<trac/log> template has been changed to remove some output from
+comments.  Although this output was never seen, generating it used CPU
+and memory.  This was especially apparent on changes that affected
+many files.  Using the new F<trac/log> template (or merging the change
+in by hand) will speed up log browsing.
 
 The diff for these changes is at
 L<http://jc.ngo.org.uk/svnweb/jc/revision/?rev=793>.
