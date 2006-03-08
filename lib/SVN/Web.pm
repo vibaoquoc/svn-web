@@ -981,7 +981,7 @@ sub handler {
 
 =head1 SEE ALSO
 
-L<SVN::Web::action>, svnweb-install(1)
+L<SVN::Web::action>, svnweb-install(1), svnweb-server(1)
 
 =head1 BUGS
 
