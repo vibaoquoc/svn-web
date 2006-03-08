@@ -43,6 +43,17 @@ Entering a revision number that does not exist will now generate a
 localised error message.  Fixes rt#17822, reported by 
 <gk5885@kickstyle.net>
 
+=item
+
+Fixed some bugs in C<svnweb-server>.  Option parsing works properly,
+and the C<--net-server> option is now honoured.
+
+=item
+
+C<svnweb-install> should now work if any directories in the install path
+contain regexp metacharacters in the filename.  Fixes rt#17282, reported by
+<CORION@cpan.org>.
+
 =back
 
 =head2 0.43, released Jan 25, 2006
